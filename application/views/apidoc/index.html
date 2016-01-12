@@ -1,0 +1,448 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>apidoc-apidoc</title>
+    <link href="/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/jsonview/jquery.jsonview.css" />
+    <style type="text/css">
+        *{
+            margin:0px;
+            padding:0px;
+        }
+        #container{
+            width:80%;
+            margin:0 auto;
+        }
+
+        .addConfig{
+            height:50px;
+        }
+        .addConfig button{
+            width:100px;
+            float:right;
+            margin-right:23px;
+        }
+
+        .item-btn-tr{
+            width:250px;
+        }
+
+        .request-params-debug {
+            width:300px;
+        }
+
+        .field-width{
+            width:150px;
+        }
+        .btn-width{
+            width:150px;
+        }
+
+        .request-params-show {
+            width:300px;
+        }
+
+        .request-params-addConfig {
+            width:300px;
+        }
+
+        .footer-position{
+            margin-top:150px;
+        }
+
+        .config-field-group{
+            width:500px;
+            margin-bottom:10px;
+        }
+        .config-field-group-config{
+            width:500px;
+            margin-bottom:10px;
+        }
+        .config-field-add-btn{
+            width:500px;
+            margin-bottom:10px;
+        }
+        .config-field-add-btn button{
+            margin-left:207px;
+        }
+        .config-field{
+            display:inline-block;
+            width:100px;
+        }
+        .config-field-btn{
+            display:inline-block;
+            width:50px;
+        }
+
+    </style>
+</head>
+<body>
+<?php include(APPLICATION_PATH.'application/views/index/header.html');?>
+<div id="container">
+    <div class="well well-lg">Api文档,可调试</div>
+    <div class="addConfig">
+        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addConfigModal">添加Api</button>
+    </div>
+    <table class="table table-striped">
+        <?php foreach($list as $item) {?>
+            <?php if($item['api_method'] == 'GET') {?>
+                <tr class="success">
+                    <td style="width:50px;line-height:32px;">
+                        <span class="label label-success">GET</span>
+                    </td>
+                    <td style="line-height:32px;"><?php echo $item['api_url'];?></td>
+                    <td class="item-btn-tr">
+                        <button type="button" class="btn btn-primary debugModal" data-toggle="modal" data-target="#debugModal" api_url="<?php echo $item['api_url'];?>" api_method="<?php echo $item['api_method'];?>" fields='<?php echo $item["fields"];?>'>调试</button>
+                        <button type="button" class="btn btn-primary showModal" data-toggle="modal" data-target="#showModal" api_url="<?php echo $item['api_url'];?>" api_method="<?php echo $item['api_method'];?>" fields='<?php echo $item["fields"];?>'>查看</button>
+                        <button type="button" class="btn btn-primary editModal" data-toggle="modal" data-target="#editModal">编辑</button>
+                        <button type="button" class="btn btn-danger deleteModal" data-toggle="modal" data-target=".bs-delete-modal-sm">删除</button>
+                    </td>
+                </tr>
+            <?php } else if ($item['api_method'] == 'POST') {?>
+                <tr class="info">
+                    <td style="width:50px;line-height:32px;">
+                        <span class="label label-primary">POST</span>
+                    </td>
+                    <td style="line-height:32px;"><?php echo $item['api_url'];?></td>
+                    <td class="item-btn-tr">
+                        <button type="button" class="btn btn-primary debugModal" data-toggle="modal" data-target="#debugModal" api_url="<?php echo $item['api_url'];?>" api_method="<?php echo $item['api_method'];?>" fields='<?php echo $item["fields"];?>'>调试</button>
+                        <button type="button" class="btn btn-primary showModal" data-toggle="modal" data-target="#showModal" api_url="<?php echo $item['api_url'];?>" api_method="<?php echo $item['api_method'];?>" fields='<?php echo $item["fields"];?>'>查看</button>
+                        <button type="button" class="btn btn-primary editModal" data-toggle="modal" data-target="#editModal">编辑</button>
+                        <button type="button" class="btn btn-danger deleteModal" data-toggle="modal" data-target=".bs-delete-modal-sm">删除</button>
+                    </td>
+                </tr>
+            <?php }?>
+        <?php }?>
+    </table>
+
+    <div class="well well-sm footer-position">Look, I'm in a small well!</div>
+</div>
+
+<!-- addConfig Modal -->
+<div class="modal fade" id="addConfigModal" tabindex="-1" role="dialog" aria-labelledby="addConfigModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="addConfigModalLabel">添加接口</h4>
+            </div>
+            <div class="modal-body">
+                <h5>接口名称</h5>
+                <input id="add-api-name" class="form-control" type="text" placeholder="接口名称" style="width:200px;">
+                <hr/>
+                <h5>接口地址</h5>
+                <input id="add-api-url" class="form-control" type="text" placeholder="接口地址" style="width:400px;">
+                <hr/>
+                <h5>请求方式</h5>
+                <div class="btn-group" data-toggle="buttons">
+                    <label class="btn btn-default active">
+                        <input type="radio" name="add-api-method" value="GET" autocomplete="off" checked>GET
+                    </label>
+                    <label class="btn btn-default">
+                        <input type="radio" name="add-api-method" value="POST" autocomplete="off">POST
+                    </label>
+                </div>
+                <hr/>
+                <h5>请求参数</h5>
+                <div class="config-field-add-btn">
+                    <button type="button" class="btn btn-success config-field-btn add-config-field-btn">添加</button>
+                </div>
+                <div class="request-params-addConfig">
+                    <div class="config-field-group">
+                        <input type="text" class="form-control config-field" name="add-api-field-name" placeholder="字段">
+                        <input type="text" class="form-control config-field" name="add-api-field-desc" placeholder="描述">
+                        <button type="button" class="btn btn-danger config-field-btn remove-config-field-btn">删除</button>
+                    </div>
+                </div>
+                <!--
+                <hr/>
+                <h5>返回结果</h5>
+                <textarea class="form-control" rows="3"></textarea>
+                -->
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                <button id="add-save-api-params" type="button" class="btn btn-primary">保存</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- debug Modal -->
+<div class="modal fade" id="debugModal" tabindex="-1" role="dialog" aria-labelledby="debugModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="debugModalLabel">调试接口</h4>
+            </div>
+            <div class="modal-body">
+                <h5>请求地址</h5>
+                <div id="request-api">
+                </div>
+                <hr/>
+                <h5>请求方式</h5>
+                <div id="request-method">
+                </div>
+                <hr/>
+                <h5>请求参数</h5>
+                <div class="request-params-debug">
+                    <button type="button" id="request-btn-debug" class="btn btn-primary btn-width">请求</button>
+                </div>
+                <hr/>
+                <h5>返回数据</h5>
+                <button id="toggle-btn-debug">Toggle</button>
+                <button id="toggle-level1-btn-debug">Toggle level1</button>
+                <button id="toggle-level2-btn-debug">Toggle level2</button>
+                <div id="json-debug" style="word-wrap: break-word;"></div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- show Modal -->
+<div class="modal fade" id="showModal" tabindex="-1" role="dialog" aria-labelledby="showModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="showModalLabel">接口数据结构</h4>
+            </div>
+            <div class="modal-body">
+                <h5>请求地址</h5>
+                <div id="show-api">
+                </div>
+                <hr/>
+                <h5>请求方式</h5>
+                <div id="show-method">
+                </div>
+                <hr/>
+                <h5>请求参数</h5>
+                <div class="show-params-fields">
+                </div>
+                <!--
+                <h5>返回数据</h5>
+                <button id="toggle-btn-show">Toggle</button>
+                <button id="toggle-level1-btn-show">Toggle level1</button>
+                <button id="toggle-level2-btn-show">Toggle level2</button>
+                <div id="json-show"></div>
+                -->
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- edit Modal -->
+<div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="editModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="editModalLabel">接口数据结构</h4>
+            </div>
+            <div class="modal-body">
+                <div class="alert alert-info" role="alert">
+                    http://demo.mpress_api.com/user/login
+                </div>
+                <hr/>
+                <h5>请求参数</h5>
+                <div class="config-field-add-btn">
+                    <button type="button" class="btn btn-success config-field-btn config-config-field-btn">添加</button>
+                </div>
+                <div class="request-params-show">
+                    <div class="config-field-group-config">
+                        <input type="email" class="form-control config-field" placeholder="字段">
+                        <input type="password" class="form-control config-field" placeholder="描述">
+                        <button type="button" class="btn btn-danger config-field-btn config-remove-config-field-btn">删除</button>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="/highcharts/jquery.min.js"></script>
+
+<script src="/bootstrap/js/bootstrap.min.js"></script>
+<script src="/jsonview/jquery.jsonview.js"></script>
+
+<script src="/res/toast.js"></script>
+
+<script>
+    $(function(){
+        // 添加field
+        $('.add-config-field-btn').click(function() {
+            var item = $('.config-field-group').eq(0).clone();
+            item.children('input').val('');
+            $('.request-params-addConfig').append(item);
+        });
+
+        // 删除field
+        $('.request-params-addConfig').on('click','.remove-config-field-btn',function() {
+            $(this).parent('div').remove();
+        });
+
+        // 添加field
+        $('.config-config-field-btn').click(function() {
+            var item = $('.config-field-group-config').eq(0).clone();
+            item.children('input').val('');
+            $('.request-params-show').append(item);
+        });
+
+        // 删除field
+        $('.request-params-show').on('click','.config-remove-config-field-btn',function() {
+            $(this).parent('div').remove();
+        });
+    });
+</script>
+
+<script type="text/javascript">
+    $(function() {
+        /** jsonview 插件 */
+        $('#toggle-btn-debug').on('click', function() {
+            $('#json-debug').JSONView('toggle');
+        });
+
+        $('#toggle-level1-btn-debug').on('click', function() {
+            $('#json-debug').JSONView('toggle', 1);
+        });
+
+        $('#toggle-level2-btn-debug').on('click', function() {
+            $('#json-debug').JSONView('toggle', 2);
+        });
+
+        $('#toggle-btn-show').on('click', function() {
+            $('#json-show').JSONView('toggle');
+        });
+
+        $('#toggle-level1-btn-show').on('click', function() {
+            $('#json-show').JSONView('toggle', 1);
+        });
+
+        $('#toggle-level2-btn-show').on('click', function() {
+            $('#json-show').JSONView('toggle', 2);
+        });
+
+        /** 添加接口-保存 */
+        $('#add-save-api-params').click(function() {
+            var api_name = $('#add-api-name').val();
+            var api_url = $('#add-api-url').val();
+            var api_method = $('[name=add-api-method]').val();
+
+            console.log(api_method);
+
+            var names = $('input[name=add-api-field-name]');
+            var descs = $('input[name=add-api-field-desc]');
+
+            var field_names = new Array();
+            for(var i= 0; i<names.length; i++) {
+                var name = names.eq(i).val();
+                field_names[i] = name;
+            }
+
+            var field_descs = new Array();
+            for(var i= 0; i<descs.length; i++) {
+                var desc = descs.eq(i).val();
+                field_descs[i] = desc;
+            }
+
+            var url = '/apidoc/saveApi';
+            var data = {"api_name":api_name,"api_url":api_url,"api_method":api_method,"field_names":field_names,"field_descs":field_descs};
+            $.post(url, data, function(ret){
+                if(ret.en == 200) {
+                    new Toast({context:$('body'),top:200 ,time:2000 ,message:'保存成功'}).success();
+                    setTimeout(function(){
+                        $('#addConfigModal').modal('hide');
+                        window.location.reload();
+                    } , 2000);
+                } else {
+                    new Toast({context:$('body'),top:200 ,time:2000, message:ret.em}).error();
+                }
+            });
+        });
+
+        /** 调试 请求*/
+        $('#request-btn-debug').click(function() {
+            var request_api = $('#request-api').html();
+            var request_method = $('#request-method').html();
+
+            var data = {};
+
+            // 获取请求参数
+            var params = $('.request-data-params');
+            for(var i = 0; i < params.length; i++) {
+                var name = params.eq(i).attr('name');
+                var value = params.eq(i).val();
+                data[name] = value;
+            }
+
+            if(request_method == 'GET') {
+                $.get(request_api ,data ,function(ret) {
+                    $("#json-debug").JSONView(ret);
+                });
+            } else if(request_method == 'POST') {
+                $.post(request_api ,data ,function(ret) {
+                    $("#json-debug").JSONView(ret);
+                });
+            }
+        });
+
+        /** "调试" 触发模态框显示 */
+        $('.debugModal').click(function () {
+            var api_url = $(this).attr('api_url');
+            var api_method = $(this).attr('api_method');
+            var fields = $(this).attr('fields');
+            fields = eval("(" + fields + ")");
+
+            // 设置url
+            $('#request-api').html(api_url);
+
+            // 设置请求的方式
+            $('#request-method').html(api_method);
+
+            // 设置 fields
+            var fields_html = '';
+            for(var i = 0; i < fields.length; i++) {
+                fields_html += '<div class="form-group"> <input type="text" class="form-control field-width request-data-params" name="' + fields[i].name + '" placeholder="' + fields[i].name + '"></div>';
+            }
+            $('.request-params-debug').prepend(fields_html);
+        });
+
+        /** "查看" 触发模态框显示 */
+        $('.showModal').click(function () {
+            var api_url = $(this).attr('api_url');
+            var api_method = $(this).attr('api_method');
+            var fields = $(this).attr('fields');
+            fields = eval("(" + fields + ")");
+
+            // 设置url
+            $('#show-api').html(api_url);
+
+            // 设置请求的方式
+            $('#show-method').html(api_method);
+
+            // 设置 fields
+            var fields_html = '';
+            for(var i = 0; i < fields.length; i++) {
+                fields_html += fields[i].name + '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' + fields[i].desc + '<br/>';
+            }
+            $('.show-params-fields').prepend(fields_html);
+        })
+
+    });
+</script>
+
+</body>
+</html>
