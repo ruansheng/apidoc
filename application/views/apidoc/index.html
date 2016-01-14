@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>apidoc-apidoc</title>
+    <title>Apidoc-apidoc</title>
     <link href="/bootstrap/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="/jsonview/jquery.jsonview.css" />
     <style type="text/css">
@@ -14,9 +14,12 @@
         }
         #container{
             width:80%;
+            min-height: 500px;
             margin:0 auto;
+            margin-top:90px;
         }
 
+        /* 添加 模态框 */
         .addConfig{
             height:50px;
         }
@@ -26,10 +29,15 @@
             margin-right:23px;
         }
 
+        .request-params-addConfig {
+            width:300px;
+        }
+
         .item-btn-tr{
             width:250px;
         }
 
+        /* 调试 模态框 */
         .request-params-debug {
             width:300px;
         }
@@ -41,32 +49,26 @@
             width:150px;
         }
 
+        /* 查看 模态框 */
         .request-params-show {
             width:300px;
-        }
-
-        .request-params-addConfig {
-            width:300px;
-        }
-
-        .footer-position{
-            margin-top:150px;
         }
 
         .config-field-group{
             width:500px;
             margin-bottom:10px;
         }
-        .config-field-group-config{
+
+        /** 编辑接口 */
+        .edit-field-group-config{
             width:500px;
             margin-bottom:10px;
         }
-        .config-field-add-btn{
-            width:500px;
-            margin-bottom:10px;
-        }
+
+        /** 添加 参数按钮 */
         .config-field-add-btn button{
             margin-left:207px;
+            margin-bottom: 10px;
         }
         .config-field{
             display:inline-block;
@@ -77,12 +79,21 @@
             width:50px;
         }
 
+        /* 删除 模态框 */
+        .delete-modal-cancel{
+            margin-left:37px;
+        }
+        .delete-modal-ensure{
+            margin-left:40px;
+        }
+
     </style>
 </head>
 <body>
+
 <?php include(APPLICATION_PATH.'application/views/index/header.html');?>
+
 <div id="container">
-    <div class="well well-lg">Api文档,可调试</div>
     <div class="addConfig">
         <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addConfigModal">添加Api</button>
     </div>
@@ -93,12 +104,15 @@
                     <td style="width:50px;line-height:32px;">
                         <span class="label label-success">GET</span>
                     </td>
+                    <td style="width:150px;line-height:32px;">
+                        <?php echo $item['api_name'];?>
+                    </td>
                     <td style="line-height:32px;"><?php echo $item['api_url'];?></td>
                     <td class="item-btn-tr">
-                        <button type="button" class="btn btn-primary debugModal" data-toggle="modal" data-target="#debugModal" api_url="<?php echo $item['api_url'];?>" api_method="<?php echo $item['api_method'];?>" fields='<?php echo $item["fields"];?>'>调试</button>
-                        <button type="button" class="btn btn-primary showModal" data-toggle="modal" data-target="#showModal" api_url="<?php echo $item['api_url'];?>" api_method="<?php echo $item['api_method'];?>" fields='<?php echo $item["fields"];?>'>查看</button>
-                        <button type="button" class="btn btn-primary editModal" data-toggle="modal" data-target="#editModal">编辑</button>
-                        <button type="button" class="btn btn-danger deleteModal" data-toggle="modal" data-target=".bs-delete-modal-sm">删除</button>
+                        <button type="button" class="btn btn-primary debugModal" data-toggle="modal" data-target="#debugModal" api_url="<?php echo $item['api_url'];?>" api_method="<?php echo $item['api_method'];?>" fields='<?php echo $item["fields"];?>' api_name="<?php echo $item['api_name'];?>">调试</button>
+                        <button type="button" class="btn btn-primary showModal" data-toggle="modal" data-target="#showModal" api_url="<?php echo $item['api_url'];?>" api_method="<?php echo $item['api_method'];?>" fields='<?php echo $item["fields"];?>' api_name="<?php echo $item['api_name'];?>">查看</button>
+                        <button type="button" class="btn btn-primary editModal" data-toggle="modal" data-target="#editModal" api_url="<?php echo $item['api_url'];?>" api_method="<?php echo $item['api_method'];?>" fields='<?php echo $item["fields"];?>' api_name="<?php echo $item['api_name'];?>" _id="<?php echo $item['_id'];?>">编辑</button>
+                        <button type="button" class="btn btn-danger deleteModal" data-toggle="modal" data-target=".bs-delete-modal-sm" _id="<?php echo $item['_id'];?>">删除</button>
                     </td>
                 </tr>
             <?php } else if ($item['api_method'] == 'POST') {?>
@@ -106,19 +120,20 @@
                     <td style="width:50px;line-height:32px;">
                         <span class="label label-primary">POST</span>
                     </td>
+                    <td style="width:150px;line-height:32px;">
+                        <?php echo $item['api_name'];?>
+                    </td>
                     <td style="line-height:32px;"><?php echo $item['api_url'];?></td>
                     <td class="item-btn-tr">
-                        <button type="button" class="btn btn-primary debugModal" data-toggle="modal" data-target="#debugModal" api_url="<?php echo $item['api_url'];?>" api_method="<?php echo $item['api_method'];?>" fields='<?php echo $item["fields"];?>'>调试</button>
-                        <button type="button" class="btn btn-primary showModal" data-toggle="modal" data-target="#showModal" api_url="<?php echo $item['api_url'];?>" api_method="<?php echo $item['api_method'];?>" fields='<?php echo $item["fields"];?>'>查看</button>
-                        <button type="button" class="btn btn-primary editModal" data-toggle="modal" data-target="#editModal">编辑</button>
-                        <button type="button" class="btn btn-danger deleteModal" data-toggle="modal" data-target=".bs-delete-modal-sm">删除</button>
+                        <button type="button" class="btn btn-primary debugModal" data-toggle="modal" data-target="#debugModal" api_url="<?php echo $item['api_url'];?>" api_method="<?php echo $item['api_method'];?>" fields='<?php echo $item["fields"];?>' api_name="<?php echo $item['api_name'];?>">调试</button>
+                        <button type="button" class="btn btn-primary showModal" data-toggle="modal" data-target="#showModal" api_url="<?php echo $item['api_url'];?>" api_method="<?php echo $item['api_method'];?>" fields='<?php echo $item["fields"];?>' api_name="<?php echo $item['api_name'];?>">查看</button>
+                        <button type="button" class="btn btn-primary editModal" data-toggle="modal" data-target="#editModal" api_url="<?php echo $item['api_url'];?>" api_method="<?php echo $item['api_method'];?>" fields='<?php echo $item["fields"];?>' api_name="<?php echo $item['api_name'];?>" _id="<?php echo $item['_id'];?>">编辑</button>
+                        <button type="button" class="btn btn-danger deleteModal" data-toggle="modal" data-target=".bs-delete-modal-sm" _id="<?php echo $item['_id'];?>">删除</button>
                     </td>
                 </tr>
             <?php }?>
         <?php }?>
     </table>
-
-    <div class="well well-sm footer-position">Look, I'm in a small well!</div>
 </div>
 
 <!-- addConfig Modal -->
@@ -138,11 +153,11 @@
                 <hr/>
                 <h5>请求方式</h5>
                 <div class="btn-group" data-toggle="buttons">
-                    <label class="btn btn-default active">
-                        <input type="radio" name="add-api-method" value="GET" autocomplete="off" checked>GET
+                    <label class="btn btn-default active" id="add-api-method-get">
+                        <input type="radio" value="GET" autocomplete="off" checked>GET
                     </label>
-                    <label class="btn btn-default">
-                        <input type="radio" name="add-api-method" value="POST" autocomplete="off">POST
+                    <label class="btn btn-default" id="add-api-method-post">
+                        <input type="radio" value="POST" autocomplete="off">POST
                     </label>
                 </div>
                 <hr/>
@@ -180,7 +195,11 @@
                 <h4 class="modal-title" id="debugModalLabel">调试接口</h4>
             </div>
             <div class="modal-body">
-                <h5>请求地址</h5>
+                <h5>接口名称</h5>
+                <div id="request-api-name">
+                </div>
+                <hr/>
+                <h5>接口地址</h5>
                 <div id="request-api">
                 </div>
                 <hr/>
@@ -190,7 +209,6 @@
                 <hr/>
                 <h5>请求参数</h5>
                 <div class="request-params-debug">
-                    <button type="button" id="request-btn-debug" class="btn btn-primary btn-width">请求</button>
                 </div>
                 <hr/>
                 <h5>返回数据</h5>
@@ -215,7 +233,11 @@
                 <h4 class="modal-title" id="showModalLabel">接口数据结构</h4>
             </div>
             <div class="modal-body">
-                <h5>请求地址</h5>
+                <h5>接口名称</h5>
+                <div id="show-api-name">
+                </div>
+                <hr/>
+                <h5>接口地址</h5>
                 <div id="show-api">
                 </div>
                 <hr/>
@@ -250,26 +272,52 @@
                 <h4 class="modal-title" id="editModalLabel">接口数据结构</h4>
             </div>
             <div class="modal-body">
-                <div class="alert alert-info" role="alert">
-                    http://demo.mpress_api.com/user/login
+                <input type="hidden" id="edit_data_id" value=""/>
+                <h5>接口名称</h5>
+                <input id="edit-api-name" class="form-control" type="text" placeholder="接口名称" style="width:200px;">
+                <hr/>
+                <h5>接口地址</h5>
+                <input id="edit-api-url" class="form-control" type="text" placeholder="接口地址" style="width:400px;">
+                <hr/>
+                <h5>请求方式</h5>
+                <div class="btn-group" data-toggle="buttons">
+                    <label class="btn btn-default" id="edit-api-method-get">
+                        <input type="radio" value="GET" autocomplete="off">GET
+                    </label>
+                    <label class="btn btn-default" id="edit-api-method-post">
+                        <input type="radio" value="POST" autocomplete="off">POST
+                    </label>
                 </div>
                 <hr/>
                 <h5>请求参数</h5>
                 <div class="config-field-add-btn">
-                    <button type="button" class="btn btn-success config-field-btn config-config-field-btn">添加</button>
+                    <button type="button" class="btn btn-success config-field-btn edit-config-field-btn">添加</button>
                 </div>
-                <div class="request-params-show">
-                    <div class="config-field-group-config">
-                        <input type="email" class="form-control config-field" placeholder="字段">
-                        <input type="password" class="form-control config-field" placeholder="描述">
-                        <button type="button" class="btn btn-danger config-field-btn config-remove-config-field-btn">删除</button>
-                    </div>
+                <div class="edit-params-fields">
                 </div>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                <button id="edit-save-api-params" type="button" class="btn btn-primary">保存</button>
             </div>
         </div>
+    </div>
+</div>
+
+<!-- delete Model -->
+<div class="modal fade bs-delete-modal-sm" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                <h4 class="modal-title" id="mySmallModalLabel">删除接口</h4>
+            </div>
+            <input type="hidden" id="delete_data_id" value=""/>
+            <div class="modal-body">
+                <button type="button" class="btn btn-default delete-modal-cancel" data-dismiss="modal">&nbsp;取&nbsp;&nbsp;消&nbsp;&nbsp;</button>
+                <button type="button" class="btn btn-danger delete-modal-ensure">&nbsp;&nbsp;删&nbsp;&nbsp;除&nbsp;&nbsp;</button>
+            </div>
+        </div><!-- /.modal-content -->
     </div>
 </div>
 
@@ -295,14 +343,14 @@
         });
 
         // 添加field
-        $('.config-config-field-btn').click(function() {
-            var item = $('.config-field-group-config').eq(0).clone();
+        $('.edit-config-field-btn').click(function() {
+            var item = $('.edit-field-group-config').eq(0).clone();
             item.children('input').val('');
-            $('.request-params-show').append(item);
+            $('.edit-params-fields').append(item);
         });
 
         // 删除field
-        $('.request-params-show').on('click','.config-remove-config-field-btn',function() {
+        $('.edit-params-fields').on('click','.config-remove-config-field-btn',function() {
             $(this).parent('div').remove();
         });
     });
@@ -339,9 +387,15 @@
         $('#add-save-api-params').click(function() {
             var api_name = $('#add-api-name').val();
             var api_url = $('#add-api-url').val();
-            var api_method = $('[name=add-api-method]').val();
 
-            console.log(api_method);
+            var is_get = $('#add-api-method-get').hasClass('active');
+            var is_post = $('#add-api-method-post').hasClass('active');
+            var api_method = '';
+            if(is_get) {
+                api_method = 'GET';
+            } else if(is_post) {
+                api_method = 'POST';
+            }
 
             var names = $('input[name=add-api-field-name]');
             var descs = $('input[name=add-api-field-desc]');
@@ -358,7 +412,7 @@
                 field_descs[i] = desc;
             }
 
-            var url = '/apidoc/saveApi';
+            var url = '/apidoc/addApi';
             var data = {"api_name":api_name,"api_url":api_url,"api_method":api_method,"field_names":field_names,"field_descs":field_descs};
             $.post(url, data, function(ret){
                 if(ret.en == 200) {
@@ -401,10 +455,14 @@
 
         /** "调试" 触发模态框显示 */
         $('.debugModal').click(function () {
+            var api_name = $(this).attr('api_name');
             var api_url = $(this).attr('api_url');
             var api_method = $(this).attr('api_method');
             var fields = $(this).attr('fields');
             fields = eval("(" + fields + ")");
+
+            // 设置api name
+            $('#request-api-name').html(api_name);
 
             // 设置url
             $('#request-api').html(api_url);
@@ -417,15 +475,21 @@
             for(var i = 0; i < fields.length; i++) {
                 fields_html += '<div class="form-group"> <input type="text" class="form-control field-width request-data-params" name="' + fields[i].name + '" placeholder="' + fields[i].name + '"></div>';
             }
+            fields_html += ' <button type="button" id="request-btn-debug" class="btn btn-primary btn-width">请求</button>';
+            $('.request-params-debug').html('');
             $('.request-params-debug').prepend(fields_html);
         });
 
         /** "查看" 触发模态框显示 */
         $('.showModal').click(function () {
+            var api_name = $(this).attr('api_name');
             var api_url = $(this).attr('api_url');
             var api_method = $(this).attr('api_method');
             var fields = $(this).attr('fields');
             fields = eval("(" + fields + ")");
+
+            // 设置api name
+            $('#show-api-name').html(api_name);
 
             // 设置url
             $('#show-api').html(api_url);
@@ -438,8 +502,118 @@
             for(var i = 0; i < fields.length; i++) {
                 fields_html += fields[i].name + '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' + fields[i].desc + '<br/>';
             }
+            $('.show-params-fields').html('');
             $('.show-params-fields').prepend(fields_html);
         })
+
+        /** "删除" 触发模态框显示 */
+        $('.deleteModal').click(function(){
+            var _id = $(this).attr('_id');
+            $('#delete_data_id').val(_id);
+        });
+
+        /** 执行 "删除" */
+        $('.delete-modal-ensure').click(function(){
+            var _id = $('#delete_data_id').val();;
+            var request_api = '/apidoc/delete';
+            if(_id != undefined && _id != '') {
+                $.post(request_api ,{"_id":_id} ,function(ret) {
+                    if(ret.en == 200) {
+                        new Toast({context:$('body'),top:200 ,time:1000 ,message:ret.em}).success();
+                        setTimeout(function(){
+                            $('#deleteModal').modal('hide');
+                            window.location.reload();
+                        } , 1000);
+                    } else {
+                        new Toast({context:$('body'),top:200 ,time:1000, message:ret.em}).error();
+                    }
+                });
+            } else {
+                new Toast({context:$('body'),top:200 ,time:1000, message:"参数不全"}).error();
+            }
+        });
+
+        /** "编辑接口" 触发模态框显示 */
+        $('.editModal').click(function() {
+            var _id = $(this).attr('_id');
+            var api_name = $(this).attr('api_name');
+            var api_url = $(this).attr('api_url');
+            var api_method = $(this).attr('api_method');
+            var fields = $(this).attr('fields');
+
+            fields = eval("(" + fields + ")");
+
+            // 保存数据id
+            $('#edit_data_id').val(_id);
+
+            // 设置接口名称
+            $('#edit-api-name').val(api_name);
+
+            // 设置url
+            $('#edit-api-url').val(api_url);
+
+            // 设置请求的方式
+            if(api_method == 'GET') {
+                $('#edit-api-method-get').addClass('active');
+            } else if(api_method == 'POST') {
+                $('#edit-api-method-post').addClass('active');
+            }
+            $('#edit-method').html(api_method);
+
+            // 设置 fields
+            var fields_html = '';
+            for(var i = 0; i < fields.length; i++) {
+                fields_html += '<div class="edit-field-group-config"> <input type="text" class="form-control config-field" name="edit-api-field-name" placeholder="字段" value="' + fields[i].name + '"> <input type="text" class="form-control config-field" placeholder="描述" name="edit-api-field-desc" value="' + fields[i].desc + '"> <button type="button" class="btn btn-danger config-field-btn config-remove-config-field-btn">删除</button></div>';
+            }
+
+            $('.edit-params-fields').html('');
+            $('.edit-params-fields').prepend(fields_html);
+        });
+
+        /** 编辑接口-保存 */
+        $('#edit-save-api-params').click(function() {
+            var _id = $('#edit_data_id').val();
+            var api_name = $('#edit-api-name').val();
+            var api_url = $('#edit-api-url').val();
+
+            var is_get = $('#edit-api-method-get').hasClass('active');
+            var is_post = $('#edit-api-method-post').hasClass('active');
+            var api_method = '';
+            if(is_get) {
+                api_method = 'GET';
+            } else if(is_post) {
+                api_method = 'POST';
+            }
+
+            var names = $('input[name=edit-api-field-name]');
+            var descs = $('input[name=edit-api-field-desc]');
+
+            var field_names = new Array();
+            for(var i= 0; i<names.length; i++) {
+                var name = names.eq(i).val();
+                field_names[i] = name;
+            }
+
+            var field_descs = new Array();
+            for(var i= 0; i<descs.length; i++) {
+                var desc = descs.eq(i).val();
+                field_descs[i] = desc;
+            }
+
+            var url = '/apidoc/saveApi';
+            var data = {"_id":_id,"api_name":api_name,"api_url":api_url,"api_method":api_method,"field_names":field_names,"field_descs":field_descs};
+            $.post(url, data, function(ret){
+                if(ret.en == 200) {
+                    new Toast({context:$('body'),top:200 ,time:2000 ,message:'保存成功'}).success();
+                    setTimeout(function(){
+                        $('#editModal').modal('hide');
+                        window.location.reload();
+                    } , 2000);
+                } else {
+                    new Toast({context:$('body'),top:200 ,time:2000, message:ret.em}).error();
+                }
+            });
+        });
 
     });
 </script>

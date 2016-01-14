@@ -15,13 +15,4 @@ class IndexController extends Base {
         return true;
     }
 
-    /**
-     * 实时抓包工具
-     * http://demo.mpress_api.com/index/apidata
-     * @return bool
-     */
-    public function apidataAction() {
-        return true;
-    }
-
 }

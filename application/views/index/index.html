@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>apidoc-index</title>
+    <title>Apidoc-index</title>
     <link href="/bootstrap/css/bootstrap.min.css" rel="stylesheet">
     <style type="text/css">
         *{
@@ -14,11 +14,14 @@
         #container{
             width:80%;
             margin:0 auto;
+            margin-top:90px;
         }
     </style>
 </head>
 <body>
+
 <?php include(APPLICATION_PATH.'application/views/index/header.html');?>
+
 <div id="container">
 
 </div>
@@ -48,60 +51,89 @@
                         }
                     }
                 }],
-                data: [{
-                    id: 'A',
-                    name: 'Apples',
-                    color: "#EC2500"
-                }, {
-                    id: 'B',
-                    name: 'Bananas',
-                    color: "#ECE100"
-                }, {
-                    id: 'O',
-                    name: 'Oranges',
-                    color: '#EC9800'
-                }, {
-                    name: 'Anne',
-                    parent: 'A',
-                    value: 5
-                }, {
-                    name: 'Rick',
-                    parent: 'A',
-                    value: 3
-                }, {
-                    name: 'Peter',
-                    parent: 'A',
-                    value: 4
-                }, {
-                    name: 'Anne',
-                    parent: 'B',
-                    value: 4
-                }, {
-                    name: 'Rick',
-                    parent: 'B',
-                    value: 10
-                }, {
-                    name: 'Peter',
-                    parent: 'B',
-                    value: 1
-                }, {
-                    name: 'Anne',
-                    parent: 'O',
-                    value: 1
-                }, {
-                    name: 'Rick',
-                    parent: 'O',
-                    value: 3
-                }, {
-                    name: 'Peter',
-                    parent: 'O',
-                    value: 3
-                }, {
-                    name: 'Susanne',
-                    parent: 'Kiwi',
-                    value: 2,
-                    color: '#9EDE00'
-                }]
+                data: [
+                    {
+                        id: 'A',
+                        name: 'nginx',
+                        color: "#428bca"
+                    },
+                    {
+                        id: 'B',
+                        name: 'php',
+                        color: "#5cb85c"
+                    },
+                    {
+                        id: 'C',
+                        name: 'mysql',
+                        color: '#5bc0de'
+                    },
+                    {
+                        id: 'D',
+                        name: 'mongo',
+                        color: '#EC9800'
+                    },
+                    {
+                        id: 'E',
+                        name: 'redis',
+                        color: '#d9534f'
+                    },
+                    {
+                        id: 'F',
+                        name: 'node',
+                        color: '#EC9800'
+                    },
+                    {
+                        name: '/usr/local/nginx/',
+                        parent: 'A',
+                        value: 3
+                    },
+                    {
+                        name: 'api.goyotime.com',
+                        parent: 'A',
+                        value: 2
+                    },
+                    {
+                        name: 'open.goyotime.com',
+                        parent: 'A',
+                        value: 2
+                    },
+                    {
+                        name: 'tool.goyotime.com',
+                        parent: 'A',
+                        value: 2
+                    },
+                    {
+                        name: 'www.goyotime.com',
+                        parent: 'A',
+                        value: 2
+                    },
+                    {
+                        name: '/usr/local/php5/',
+                        parent: 'B',
+                        value: 4
+                    },
+                    {
+                        name: '/usr/local/mysql/',
+                        parent: 'C',
+                        value: 5
+                    },
+                    {
+                        name: '/usr/local/mongo/',
+                        parent: 'D',
+                        value: 3
+                    },
+                    {
+                        name: '/usr/local/redis/',
+                        parent: 'E',
+                        value: 3
+                    },
+                    {
+                        name: 'Node',
+                        parent: 'F',
+                        value: 2,
+                        color: '#9EDE00'
+                    }
+                ]
             }],
             title: {
                 text: 'mpress config'
