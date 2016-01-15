@@ -6,7 +6,7 @@
  * echo $curl->data(array('name'=>'ruansheng'))->post("http://www.qwbcg.com/");
  * echo $curl->close();
  */
-class CurlLib {
+class Curl {
     /**
      * 操作句柄
      * @var mixed

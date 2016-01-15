@@ -67,8 +67,7 @@ class Base extends Yaf_Controller_Abstract {
         $ret = array(
             'en' => $en,
             'em' => $em,
-            'data' => base64_encode($this->encrypt(json_encode($data))),
-            'debug' => $data
+            'data' => $data,
         );
         exit(json_encode($ret));
     }

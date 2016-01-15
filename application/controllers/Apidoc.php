@@ -222,4 +222,70 @@ class ApidocController extends Base {
 
         return false;
     }
+
+    /**
+     * 调试请求
+     * http://demo.mpress_api.com/apidoc/requestDebug
+     */
+    public function requestDebugAction() {
+        $data = $this->getRequest()->getRequest();
+
+        if(!isset($data['request_api'])) {
+            $this->responseJson(401, 'request_api no isset');
+        } else if(empty($data['request_api'])){
+            $this->responseJson(401, 'request_api is empty');
+        }
+
+        if(!isset($data['request_method'])) {
+            $this->responseJson(401, 'request_method no isset');
+        } else if(empty($data['request_method'])){
+            $this->responseJson(401, 'request_method is empty');
+        }
+
+        if(!isset($data['request_params'])) {
+            $this->responseJson(401, 'request_params no isset');
+        }
+        if(!empty($data['request_params'])){
+            foreach($data['request_params'] as $key => $val) {
+                if(empty($val)) {
+                    $this->responseJson(401, $key . ' is empty');
+                }
+            }
+        }
+
+        $ret = [];
+
+        $Curl = new Curl();
+        if($data['request_method'] == 'GET') {
+            if(empty($data['request_params'])) {
+                $request_api = $data['request_api'];
+            } else {
+                $request_api = $data['request_api'] . '?'. http_build_query($data['request_params']);
+            }
+
+            $ret = $Curl->get($request_api);
+            $Curl->close();
+        } else if($data['request_method'] == 'POST') {
+            if(!empty($data['request_params'])) {
+                ksort($data['request_params']);
+                $params = json_encode($data['request_params']);
+                $params = base64_encode($this->encrypt($params));
+                $ret = $Curl->data(['data'=>$params])->post($data['request_api']);
+            } else {
+                $ret = $Curl->data([])->post($data['request_api']);
+            }
+            $Curl->close();
+        } else {
+            $this->responseJson(402, '接口的请求方式不正确');
+        }
+
+        $ret = json_decode($ret, true);
+
+        if(!empty($ret) && !empty($ret['data'])) {
+            $ret['data'] = $this->decrypt(base64_decode($ret['data']));
+        }
+
+        $this->responseJson(200, 'success', $ret);
+        return false;
+    }
 }

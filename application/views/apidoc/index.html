@@ -428,29 +428,35 @@
         });
 
         /** 调试 请求*/
-        $('#request-btn-debug').click(function() {
+        $('.request-params-debug').on('click', '#request-btn-debug', function() {
             var request_api = $('#request-api').html();
             var request_method = $('#request-method').html();
 
             var data = {};
 
-            // 获取请求参数
+            // 设置请求的地址
+            data['request_api'] = request_api;
+
+            // 设置请求的方式
+            data['request_method'] = request_method;
+
+            // 设置请求参数
+            data['request_params'] = {};
             var params = $('.request-data-params');
+
             for(var i = 0; i < params.length; i++) {
                 var name = params.eq(i).attr('name');
                 var value = params.eq(i).val();
-                data[name] = value;
+                data['request_params'][name] = value;
             }
 
-            if(request_method == 'GET') {
-                $.get(request_api ,data ,function(ret) {
-                    $("#json-debug").JSONView(ret);
-                });
-            } else if(request_method == 'POST') {
-                $.post(request_api ,data ,function(ret) {
-                    $("#json-debug").JSONView(ret);
-                });
-            }
+            $.post('/apidoc/requestDebug' ,data ,function(ret) {
+                if(ret.en == 200) {
+                    $("#json-debug").JSONView(ret.data);
+                } else {
+                    new Toast({context:$('body'),top:200 ,time:1000, message:ret.em}).error();
+                }
+            });
         });
 
         /** "调试" 触发模态框显示 */
@@ -478,6 +484,8 @@
             fields_html += ' <button type="button" id="request-btn-debug" class="btn btn-primary btn-width">请求</button>';
             $('.request-params-debug').html('');
             $('.request-params-debug').prepend(fields_html);
+
+            $('#json-debug').html('');
         });
 
         /** "查看" 触发模态框显示 */
