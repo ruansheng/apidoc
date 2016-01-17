@@ -11,7 +11,7 @@ class ApidocModel {
      * __construct
      */
     public function __construct() {
-        $this->masterApidocCollection = MongoClientFactory::getBlogMongoClient()->selectCollection('apidoc');
+        $this->masterApidocCollection = MongoClientFactory::getApidocMongoClient()->selectCollection('apidoc');
     }
 
     /**

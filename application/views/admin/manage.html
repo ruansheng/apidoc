@@ -1,0 +1,240 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Apidoc-setting</title>
+    <link href="/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <style type="text/css">
+        *{
+            margin:0px;
+            padding:0px;
+        }
+        #container{
+            width:80%;
+            margin:0 auto;
+            margin-top:90px;
+        }
+        .add-manager{
+            height:50px;
+        }
+        .add-manager button{
+            width:100px;
+            float:right;
+            margin-right:23px;
+        }
+
+        /* 删除 模态框 */
+        .delete-modal-cancel{
+            margin-left:37px;
+        }
+        .delete-modal-ensure{
+            margin-left:40px;
+        }
+    </style>
+</head>
+<body>
+
+<?php include(APPLICATION_PATH.'application/views/index/header.html');?>
+
+<div id="container">
+    <div class="add-manager">
+        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addAdminModal">添加管理员</button>
+    </div>
+    <table class="table table-bordered">
+        <thead>
+        <tr>
+            <th>账号名</th>
+            <th>类型</th>
+            <th>状态</th>
+            <th>操作</th>
+        </tr>
+        </thead>
+        <tbody>
+        <?php foreach($list as $item){ ?>
+        <tr style="height:51px;">
+            <td><?php echo $item['username'];?></td>
+            <td class="center">
+                <?php if($item['super'] == 1) {?>
+                    <span class="label label-success">超级管理员</span>
+                <?php }else if($item['super'] == 0) {?>
+                    <span class="label label-default">普通管理员</span>
+                <?php }?>
+            </td>
+            <td class="center">
+                <?php if($item['status'] == 0) {?>
+                    <span class="label label-success">正常</span>
+                <?php }else if($item['status'] == 1) {?>
+                    <span class="label label-danger">已禁用</span>
+                <?php }?>
+            </td>
+            <td class="center">
+                <?php if($base_admininfo['super'] == 1) {?>
+                    <?php if($base_adminid != $item['_id']) {?>
+                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addAdminModal">配置</button>
+                        <button type="button" class="btn btn-danger deleteAdminModal" data-toggle="modal" data-target="#removeAdminModal" _id="<?php echo $item['_id'];?>">删除</button>
+                    <?php }?>
+                <?php }?>
+            </td>
+        </tr>
+        <?php }?>
+        </tbody>
+    </table>
+</div>
+
+<!-- addAdmin Modal -->
+<div class="modal fade" id="addAdminModal" tabindex="-1" role="dialog" aria-labelledby="addAdminModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="addAdminModalLabel">添加管理员</h4>
+            </div>
+            <div class="modal-body">
+                <h5>账号</h5>
+                <input id="add-admin-name" class="form-control" type="text" placeholder="username" style="width:200px;">
+                <hr/>
+                <h5>密码</h5>
+                <input id="add-admin-password" class="form-control" type="password" placeholder="password" style="width:400px;">
+                <hr/>
+                <h5>重复密码</h5>
+                <input id="add-admin-repassword" class="form-control" type="password" placeholder="repassword" style="width:400px;">
+                <hr/>
+                <h5>是否启用</h5>
+                <div class="btn-group" data-toggle="buttons">
+                    <label class="btn btn-default active" id="add-admin-1">
+                        <input type="radio" value="GET" autocomplete="off" checked>启用
+                    </label>
+                    <label class="btn btn-default" id="add-admin-2">
+                        <input type="radio" value="POST" autocomplete="off">禁用
+                    </label>
+                </div>
+                <hr/>
+                <h5>权限</h5>
+                <div class="btn-group" data-toggle="buttons">
+                    <label class="btn btn-default active" id="authority-read">
+                        <input type="checkbox" autocomplete="off" checked>读(read)
+                    </label>
+                    <label class="btn btn-default" id="authority-write">
+                        <input type="checkbox" autocomplete="off">写(read)
+                    </label>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                <button id="add-admin-submit" type="button" class="btn btn-primary">添加</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- delete Admin Model -->
+<div class="modal fade bs-delete-modal-sm" id="removeAdminModal" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                <h4 class="modal-title" id="mySmallModalLabel">删除管理员</h4>
+            </div>
+            <input type="hidden" id="delete_data_id" value=""/>
+            <div class="modal-body">
+                <button type="button" class="btn btn-default delete-modal-cancel" data-dismiss="modal">&nbsp;取&nbsp;&nbsp;消&nbsp;&nbsp;</button>
+                <button type="button" class="btn btn-danger delete-modal-ensure">&nbsp;&nbsp;删&nbsp;&nbsp;除&nbsp;&nbsp;</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div>
+</div>
+
+<script src="/res/jquery.min.js"></script>
+<script src="/bootstrap/js/bootstrap.min.js"></script>
+<script src="/res/toast.js"></script>
+
+<script type="text/javascript">
+    $(function () {
+
+        /** 添加管理员-保存 */
+        $('#add-admin-submit').click(function() {
+            var username = $('#add-admin-name').val();
+            var password = $('#add-admin-password').val();
+            var repassword = $('#add-admin-repassword').val();
+
+            var is_yes = $('#add-admin-1').hasClass('active');
+            var is_no = $('#add-admin-2').hasClass('active');
+            var status = 0;
+            if(is_yes) {
+                status = 0;
+            } else if(is_no) {
+                status = 1;
+            }
+
+            var authority_read = $('#authority-read').hasClass('active');
+            var authority_write = $('#authority-write').hasClass('active');
+
+            if(username == undefined || username == '') {
+                new Toast({context:$('body'),top:200 ,time:2000, message:'username id empty'}).error();
+                return false;
+            }
+
+            if(password == undefined || password == '') {
+                new Toast({context:$('body'),top:200 ,time:2000, message:'password id empty'}).error();
+                return false;
+            }
+
+            if(repassword == undefined || repassword == '') {
+                new Toast({context:$('body'),top:200 ,time:2000, message:'repassword id empty'}).error();
+                return false;
+            }
+
+            if(password != repassword) {
+                new Toast({context:$('body'),top:200 ,time:2000, message:'密码与重复密码不相同'}).error();
+                return false;
+            }
+
+            var url = '/admin/addSaveAdmin';
+            var data = {"username":username,"password":password,"repassword":repassword,"status":status,"authority_read":authority_read,"authority_write":authority_write};
+            $.post(url, data, function(ret){
+                if(ret.en == 200) {
+                    new Toast({context:$('body'),top:200 ,time:2000 ,message:'保存成功'}).success();
+                    setTimeout(function(){
+                        $('#addAdminModal').modal('hide');
+                        window.location.reload();
+                    } , 2000);
+                } else {
+                    new Toast({context:$('body'),top:200 ,time:2000, message:ret.em}).error();
+                }
+            });
+        });
+
+        /** "删除" 触发模态框显示 */
+        $('.deleteAdminModal').click(function(){
+            var _id = $(this).attr('_id');
+            $('#delete_data_id').val(_id);
+        });
+
+        /** 执行 "删除" */
+        $('.delete-modal-ensure').click(function(){
+            var _id = $('#delete_data_id').val();;
+            var request_api = '/admin/deleteAdmin';
+            if(_id != undefined && _id != '') {
+                $.post(request_api ,{"_id":_id} ,function(ret) {
+                    if(ret.en == 200) {
+                        new Toast({context:$('body'),top:200 ,time:1000 ,message:ret.em}).success();
+                        setTimeout(function(){
+                            $('#deleteModal').modal('hide');
+                            window.location.reload();
+                        } , 1000);
+                    } else {
+                        new Toast({context:$('body'),top:200 ,time:1000, message:ret.em}).error();
+                    }
+                });
+            } else {
+                new Toast({context:$('body'),top:200 ,time:1000, message:"参数不全"}).error();
+            }
+        });
+
+    });
+</script>
+
+</body>
+</html>

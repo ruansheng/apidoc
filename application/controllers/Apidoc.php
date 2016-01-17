@@ -20,7 +20,7 @@ class ApidocController extends Base {
             $v['_id'] = $v['_id']->{'$id'};
             $v['fields'] = json_encode($v['fields']);
 
-            $v['time'] = date('Y-m-d H:i:s', $v['time']->sec);
+            $v['time'] = date('Y-m-d H:i:s', $v['time']);
 
             $list[] = $v;
         }
@@ -94,8 +94,8 @@ class ApidocController extends Base {
             'api_url' => $data['api_url'],
             'api_method' => $data['api_method'],
             'fields' => $fields,
-            'time' => new MongoDate(),
-            'update_time' => new MongoDate()
+            'time' => strval(time()),
+            'update_time' => strval(time())
         );
 
         $Apidoc = new ApidocModel();
@@ -182,7 +182,7 @@ class ApidocController extends Base {
             'api_url' => $data['api_url'],
             'api_method' => $data['api_method'],
             'fields' => $fields,
-            'update_time' => new MongoDate()
+            'update_time' => strval(time())
         );
 
         $Apidoc = new ApidocModel();

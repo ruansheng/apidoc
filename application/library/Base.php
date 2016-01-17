@@ -6,7 +6,8 @@
  */
 class Base extends Yaf_Controller_Abstract {
 
-    protected $userId = null;
+    protected $adminId = null;
+    protected $adminInfo = null;
 
     private $whiteUri = array(
         '/admin/index',
@@ -17,10 +18,15 @@ class Base extends Yaf_Controller_Abstract {
         session_start();
         $requestUri = $_SERVER['REQUEST_URI'];
         if(!in_array($requestUri, $this->whiteUri)) {
-            $adminid = $_SESSION['adminid'];
-            if(empty($adminid)) {
+            $this->adminId = $_SESSION['adminid'];
+            if(empty($this->adminId)) {
                 header('Location:/admin/index');
             }
+            $Admin = new AdminModel();
+            $this->adminInfo = $Admin->getAdminInfo($this->adminId);
+
+            $this->getView()->assign('base_adminid', $this->adminId);
+            $this->getView()->assign('base_admininfo', $this->adminInfo);
         }
     }
 

@@ -1,0 +1,108 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Apidoc-setting</title>
+    <link href="/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <style type="text/css">
+        *{
+            margin:0px;
+            padding:0px;
+        }
+        #container{
+            width:80%;
+            margin:0 auto;
+            margin-top:90px;
+        }
+
+    </style>
+</head>
+<body>
+
+<?php include(APPLICATION_PATH.'application/views/index/header.html');?>
+
+<div id="container">
+    <div class="well well-lg">
+        <div class="login-froms">
+            <input type="hidden" id="_id" value="<?php echo $adminid;?>"/>
+            <div class="form-group">
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" id="username" style="width:250px;" placeholder="username" value="<?php echo $info['username'];?>">
+                </div>
+            </div>
+            <br/><br/><br/>
+            <div class="form-group">
+                <div class="col-sm-10">
+                    <input type="password" class="form-control" id="password" style="width:250px;" placeholder="password">
+                </div>
+            </div>
+            <br/><br/>
+            <div class="form-group">
+                <div class="col-sm-10">
+                    <input type="password" class="form-control" id="repassword" style="width:250px;" placeholder="repassword">
+                </div>
+            </div>
+            <br/><br/>
+            <button class="btn btn-primary" id="submit-btn" style="width:249px;margin-left:15px;" type="submit">保存</button>
+        </div>
+    </div>
+</div>
+
+<script src="/res/jquery.min.js"></script>
+<script src="/bootstrap/js/bootstrap.min.js"></script>
+<script src="/res/toast.js"></script>
+
+<script type="text/javascript">
+    $(function () {
+        /** 保存设置 */
+        $('#submit-btn').click(function() {
+            var _id = $('#_id').val();
+            var username = $('#username').val();
+            var password = $('#password').val();
+            var repassword = $('#repassword').val();
+
+            if(_id == undefined || _id == '') {
+                new Toast({context:$('body'),top:200 ,time:2000, message:'参数不全'}).error();
+                return false;
+            }
+
+            if(username == undefined || username == '') {
+                new Toast({context:$('body'),top:200 ,time:2000, message:'username id empty'}).error();
+                return false;
+            }
+
+            if(password == undefined || password == '') {
+                new Toast({context:$('body'),top:200 ,time:2000, message:'password id empty'}).error();
+                return false;
+            }
+
+            if(repassword == undefined || repassword == '') {
+                new Toast({context:$('body'),top:200 ,time:2000, message:'repassword id empty'}).error();
+                return false;
+            }
+
+            if(password != repassword) {
+                new Toast({context:$('body'),top:200 ,time:2000, message:'密码与重复密码不相同'}).error();
+                return false;
+            }
+            var url = '/admin/saveSetting';
+            var data = {"_id":_id,"username":username,"password":password,"repassword":repassword};
+            $.post(url, data, function(ret){
+                if(ret.en == 200) {
+                    new Toast({context:$('body'),top:200 ,time:2000 ,message:'保存成功'}).success();
+                    setTimeout(function(){
+                        window.location.reload();
+                    } , 1000);
+                } else {
+                    new Toast({context:$('body'),top:200 ,time:2000, message:ret.em}).error();
+                }
+            });
+        });
+
+    });
+</script>
+
+</body>
+</html>

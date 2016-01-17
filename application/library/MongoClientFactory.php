@@ -9,9 +9,12 @@ class MongoClientFactory {
      * getBlogMongoClient
      * @return MongoDb
      */
-    public static function getBlogMongoClient() {
-        $db = 'apidoc';
-        $MongoClient = self::getMongoClient(array('host'=>'127.0.0.1', 'port'=>27017), $db);
+    public static function getApidocMongoClient() {
+        $config = Yaf_Application::app()->getConfig()->toArray();
+        $host = $config['database']['mongo']['host'];
+        $db = $config['database']['mongo']['db'];
+        $port = $config['database']['mongo']['port'];
+        $MongoClient = self::getMongoClient(array('host'=>$host, 'port'=>$port), $db);
         return $MongoClient->selectDB($db);
     }
 
@@ -19,11 +22,14 @@ class MongoClientFactory {
      * getBlogAuthMongoClient
      * @return MongoClient
      */
-    public static function getBlogAuthMongoClient() {
-        $user = '';
-        $pwd = '';
-        $db = 'apidoc';
-        $MongoClient = self::getAuthMongoClient(array('host'=>'127.0.0.1', 'port'=>27017), array('user'=>$user,'pwd'=>$pwd), $db);
+    public static function getApidocAuthMongoClient() {
+        $config = Yaf_Application::app()->getConfig()->toArray();
+        $host = $config['database']['mongo']['host'];
+        $db = $config['database']['mongo']['db'];
+        $port = $config['database']['mongo']['port'];
+        $user = $config['database']['mongo']['user'];
+        $pwd = $config['database']['mongo']['pwd'];
+        $MongoClient = self::getAuthMongoClient(array('host'=>$host, 'port' => $port), array('user'=>$user,'pwd'=>$pwd), $db);
         return $MongoClient->selectDB($db);
     }
 
