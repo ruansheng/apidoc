@@ -242,8 +242,18 @@
                 return false;
             }
 
+            var read = 0;
+            if(authority_read == true) {
+                read = 1;
+            }
+
+            var write = 0;
+            if(authority_write == true) {
+                write = 1;
+            }
+
             var url = '/admin/addSaveAdmin';
-            var data = {"username":username,"password":password,"repassword":repassword,"status":status,"authority_read":authority_read,"authority_write":authority_write};
+            var data = {"username":username,"password":password,"repassword":repassword,"status":status,"authority_read":read,"authority_write":write};
             $.post(url, data, function(ret){
                 if(ret.en == 200) {
                     new Toast({context:$('body'),top:200 ,time:2000 ,message:'保存成功'}).success();
