@@ -94,8 +94,8 @@ class ApidocController extends Base {
             'api_url' => $data['api_url'],
             'api_method' => $data['api_method'],
             'fields' => $fields,
-            'time' => strval(time()),
-            'update_time' => strval(time())
+            'time' => time(),
+            'update_time' => time()
         );
 
         $Apidoc = new ApidocModel();
@@ -182,7 +182,7 @@ class ApidocController extends Base {
             'api_url' => $data['api_url'],
             'api_method' => $data['api_method'],
             'fields' => $fields,
-            'update_time' => strval(time())
+            'update_time' => time()
         );
 
         $Apidoc = new ApidocModel();

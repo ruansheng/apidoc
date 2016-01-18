@@ -132,6 +132,9 @@ class AdminController extends Base {
         $list = [];
         foreach($rows as $v) {
             $v['_id'] = $v['_id']->{'$id'};
+
+            $v['date'] = date('Y-m-d H:i:s', $v['time']);
+            $v['update_date'] = date('Y-m-d H:i:s', $v['update_time']);
             $list[] = $v;
         }
 
@@ -183,6 +186,62 @@ class AdminController extends Base {
 
         $Admin = new AdminModel();
         $Admin->addSaveAdmin($data['username'], $data['password'], $data['status'], $data['authority_read'], $data['authority_write']);
+        $this->responseJson(200, '添加成功');
+        return false;
+    }
+
+    /**
+     * 保存管理员
+     * http://demo.mpress_api.com/admin/configSaveAdmin
+     * @return bool
+     */
+    public function configSaveAdminAction() {
+        $data = $this->getRequest()->getRequest();
+
+        if(!isset($data['_id'])) {
+            $this->responseJson(401, '_id is empty');
+        } else if(empty($data['_id'])){
+            $this->responseJson(401, '_id is empty');
+        }
+
+        if(!isset($data['username'])) {
+            $this->responseJson(401, 'username is empty');
+        } else if(empty($data['username'])){
+            $this->responseJson(401, 'username is empty');
+        }
+
+        if(!isset($data['password'])) {
+            $this->responseJson(401, 'password is empty');
+        }
+
+        if(!isset($data['repassword'])) {
+            $this->responseJson(401, 'repassword is empty');
+        }
+
+        if($data['password'] != '' && $data['repassword'] != '') {
+            if($data['password'] != $data['repassword']) {
+                $this->responseJson(401, '密码与重复密码必须相等');
+            }
+        } else if($data['password'] == '' && $data['repassword'] != '') {
+            $this->responseJson(401, '密码不能为空');
+        } else if($data['password'] != '' && $data['repassword'] == '') {
+            $this->responseJson(401, '重复密码不能为空');
+        }
+
+        if(!isset($data['status'])) {
+            $this->responseJson(401, 'status is empty');
+        }
+
+        if(!isset($data['authority_read'])) {
+            $this->responseJson(401, 'authority_read is empty');
+        }
+
+        if(!isset($data['authority_write'])) {
+            $this->responseJson(401, 'authority_write is empty');
+        }
+
+        $Admin = new AdminModel();
+        $Admin->configSaveAdmin($data['_id'], $data['username'], $data['password'], $data['status'], $data['authority_read'], $data['authority_write']);
         $this->responseJson(200, '添加成功');
         return false;
     }

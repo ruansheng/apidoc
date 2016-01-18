@@ -46,6 +46,8 @@
         <thead>
         <tr>
             <th>账号名</th>
+            <th>添加时间</th>
+            <th>更新时间</th>
             <th>类型</th>
             <th>状态</th>
             <th>操作</th>
@@ -55,6 +57,8 @@
         <?php foreach($list as $item){ ?>
         <tr style="height:51px;">
             <td><?php echo $item['username'];?></td>
+            <td><?php echo $item['date'];?></td>
+            <td><?php echo $item['update_date'];?></td>
             <td class="center">
                 <?php if($item['super'] == 1) {?>
                     <span class="label label-success">超级管理员</span>
@@ -72,7 +76,7 @@
             <td class="center">
                 <?php if($base_admininfo['super'] == 1) {?>
                     <?php if($base_adminid != $item['_id']) {?>
-                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addAdminModal">配置</button>
+                        <button type="button" class="btn btn-primary configAdminModal" data-toggle="modal" data-target="#configAdminModal" _id="<?php echo $item['_id'];?>" username="<?php echo $item['username'];?>" status="<?php echo $item['status'];?>" read="<?php echo $item['authority']['read'];?>" write="<?php echo $item['authority']['write'];?>">配置</button>
                         <button type="button" class="btn btn-danger deleteAdminModal" data-toggle="modal" data-target="#removeAdminModal" _id="<?php echo $item['_id'];?>">删除</button>
                     <?php }?>
                 <?php }?>
@@ -96,10 +100,10 @@
                 <input id="add-admin-name" class="form-control" type="text" placeholder="username" style="width:200px;">
                 <hr/>
                 <h5>密码</h5>
-                <input id="add-admin-password" class="form-control" type="password" placeholder="password" style="width:400px;">
+                <input id="add-admin-password" class="form-control" type="password" placeholder="password" style="width:200px;">
                 <hr/>
                 <h5>重复密码</h5>
-                <input id="add-admin-repassword" class="form-control" type="password" placeholder="repassword" style="width:400px;">
+                <input id="add-admin-repassword" class="form-control" type="password" placeholder="repassword" style="width:200px;">
                 <hr/>
                 <h5>是否启用</h5>
                 <div class="btn-group" data-toggle="buttons">
@@ -124,6 +128,53 @@
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
                 <button id="add-admin-submit" type="button" class="btn btn-primary">添加</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- configAdmin Modal -->
+<div class="modal fade" id="configAdminModal" tabindex="-1" role="dialog" aria-labelledby="configAdminModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="configAdminModalLabel">添加管理员</h4>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="config_data_id"/>
+                <h5>账号</h5>
+                <input id="config-admin-name" class="form-control" type="text" placeholder="username" style="width:200px;">
+                <hr/>
+                <h5>密码</h5>
+                <input id="config-admin-password" class="form-control" type="password" placeholder="password" style="width:200px;">
+                <hr/>
+                <h5>重复密码</h5>
+                <input id="config-admin-repassword" class="form-control" type="password" placeholder="repassword" style="width:200px;">
+                <hr/>
+                <h5>是否启用</h5>
+                <div class="btn-group" data-toggle="buttons">
+                    <label class="btn btn-default" id="config-admin-1">
+                        <input type="radio" value="GET" autocomplete="off" checked>启用
+                    </label>
+                    <label class="btn btn-default" id="config-admin-2">
+                        <input type="radio" value="POST" autocomplete="off">禁用
+                    </label>
+                </div>
+                <hr/>
+                <h5>权限</h5>
+                <div class="btn-group" data-toggle="buttons">
+                    <label class="btn btn-default" id="config-authority-read">
+                        <input type="checkbox" autocomplete="off" checked>读(read)
+                    </label>
+                    <label class="btn btn-default" id="config-authority-write">
+                        <input type="checkbox" autocomplete="off">写(read)
+                    </label>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                <button id="config-admin-submit" type="button" class="btn btn-primary">保存</button>
             </div>
         </div>
     </div>
@@ -206,6 +257,102 @@
             });
         });
 
+        /** "配置" 触发模态框显示 */
+        $('.configAdminModal').click(function(){
+            var _id = $(this).attr('_id');
+            var username = $(this).attr('username');
+            var status = $(this).attr('status');
+            var read = $(this).attr('read');
+            var write = $(this).attr('write');
+
+            $('#config_data_id').val(_id);
+            $('#config-admin-name').val(username);
+
+            if(status == 0) {
+                $('#config-admin-1').addClass('active');
+            } else if(status == 1) {
+                $('#config-admin-2').addClass('active');
+            }
+
+            if(read == 1) {
+                $('#config-authority-read').addClass('active');
+            }
+            if(write == 1) {
+                $('#config-authority-write').addClass('active');
+            }
+        });
+
+        /** 配置管理员-保存 */
+        $('#config-admin-submit').click(function() {
+            var _id = $('#config_data_id').val();
+            var username = $('#config-admin-name').val();
+            var password = $('#config-admin-password').val();
+            var repassword = $('#config-admin-repassword').val();
+
+            var is_yes = $('#config-admin-1').hasClass('active');
+            var is_no = $('#config-admin-2').hasClass('active');
+            var status = 0;
+            if(is_yes) {
+                status = 0;
+            } else if(is_no) {
+                status = 1;
+            }
+
+            var authority_read = $('#config-authority-read').hasClass('active');
+            var authority_write = $('#config-authority-write').hasClass('active');
+
+            if(_id == undefined || _id == '') {
+                new Toast({context:$('body'),top:200 ,time:2000, message:'username id empty'}).error();
+                return false;
+            }
+
+            if(username == undefined || username == '') {
+                new Toast({context:$('body'),top:200 ,time:2000, message:'username id empty'}).error();
+                return false;
+            }
+
+            if(password != '' && repassword != '') {
+                if(password != repassword) {
+                    new Toast({context:$('body'),top:200 ,time:2000, message:'密码与重复密码不相同'}).error();
+                    return false;
+                }
+            } else if(password == '' && repassword != '') {
+                if(password != repassword) {
+                    new Toast({context:$('body'),top:200 ,time:2000, message:'密码不能为空'}).error();
+                    return false;
+                }
+            } else if(password != '' && repassword == '') {
+                if(password != repassword) {
+                    new Toast({context:$('body'),top:200 ,time:2000, message:'重复密码不能为空'}).error();
+                    return false;
+                }
+            }
+
+            var read = 0;
+            if(authority_read == true) {
+                read = 1;
+            }
+
+            var write = 0;
+            if(authority_write == true) {
+                write = 1;
+            }
+
+            var url = '/admin/configSaveAdmin';
+            var data = {"_id":_id,"username":username,"password":password,"repassword":repassword,"status":status,"authority_read":read,"authority_write":write};
+            $.post(url, data, function(ret){
+                if(ret.en == 200) {
+                    new Toast({context:$('body'),top:200 ,time:2000 ,message:'保存成功'}).success();
+                    setTimeout(function(){
+                        $('#addAdminModal').modal('hide');
+                        window.location.reload();
+                    } , 2000);
+                } else {
+                    new Toast({context:$('body'),top:200 ,time:2000, message:ret.em}).error();
+                }
+            });
+        });
+
         /** "删除" 触发模态框显示 */
         $('.deleteAdminModal').click(function(){
             var _id = $(this).attr('_id');
@@ -214,7 +361,7 @@
 
         /** 执行 "删除" */
         $('.delete-modal-ensure').click(function(){
-            var _id = $('#delete_data_id').val();;
+            var _id = $('#delete_data_id').val();
             var request_api = '/admin/deleteAdmin';
             if(_id != undefined && _id != '') {
                 $.post(request_api ,{"_id":_id} ,function(ret) {
