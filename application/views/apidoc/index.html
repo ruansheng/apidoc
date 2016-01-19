@@ -36,6 +36,10 @@
         .item-btn-tr{
             width:250px;
         }
+        .item-btn-tr button{
+            float:right;
+            margin-right:3px;
+        }
 
         /* 调试 模态框 */
         .request-params-debug {
@@ -104,15 +108,17 @@
                     <td style="width:50px;line-height:32px;">
                         <span class="label label-success">GET</span>
                     </td>
-                    <td style="width:150px;line-height:32px;">
+                    <td style="width:250px;line-height:32px;">
                         <?php echo $item['api_name'];?>
                     </td>
                     <td style="line-height:32px;"><?php echo $item['api_url'];?></td>
                     <td class="item-btn-tr">
+                        <?php if($base_admininfo['super'] == 1) {?>
+                            <button type="button" class="btn btn-danger deleteModal" data-toggle="modal" data-target=".bs-delete-modal-sm" _id="<?php echo $item['_id'];?>">删除</button>
+                            <button type="button" class="btn btn-primary editModal" data-toggle="modal" data-target="#editModal" api_url="<?php echo $item['api_url'];?>" api_method="<?php echo $item['api_method'];?>" fields='<?php echo $item["fields"];?>' api_name="<?php echo $item['api_name'];?>" _id="<?php echo $item['_id'];?>">编辑</button>
+                        <?php }?>
                         <button type="button" class="btn btn-primary debugModal" data-toggle="modal" data-target="#debugModal" api_url="<?php echo $item['api_url'];?>" api_method="<?php echo $item['api_method'];?>" fields='<?php echo $item["fields"];?>' api_name="<?php echo $item['api_name'];?>">调试</button>
                         <button type="button" class="btn btn-primary showModal" data-toggle="modal" data-target="#showModal" api_url="<?php echo $item['api_url'];?>" api_method="<?php echo $item['api_method'];?>" fields='<?php echo $item["fields"];?>' api_name="<?php echo $item['api_name'];?>">查看</button>
-                        <button type="button" class="btn btn-primary editModal" data-toggle="modal" data-target="#editModal" api_url="<?php echo $item['api_url'];?>" api_method="<?php echo $item['api_method'];?>" fields='<?php echo $item["fields"];?>' api_name="<?php echo $item['api_name'];?>" _id="<?php echo $item['_id'];?>">编辑</button>
-                        <button type="button" class="btn btn-danger deleteModal" data-toggle="modal" data-target=".bs-delete-modal-sm" _id="<?php echo $item['_id'];?>">删除</button>
                     </td>
                 </tr>
             <?php } else if ($item['api_method'] == 'POST') {?>
@@ -120,15 +126,17 @@
                     <td style="width:50px;line-height:32px;">
                         <span class="label label-primary">POST</span>
                     </td>
-                    <td style="width:150px;line-height:32px;">
+                    <td style="width:250px;line-height:32px;">
                         <?php echo $item['api_name'];?>
                     </td>
                     <td style="line-height:32px;"><?php echo $item['api_url'];?></td>
                     <td class="item-btn-tr">
+                        <?php if($base_admininfo['super'] == 1) {?>
+                            <button type="button" class="btn btn-danger deleteModal" data-toggle="modal" data-target=".bs-delete-modal-sm" _id="<?php echo $item['_id'];?>">删除</button>
+                            <button type="button" class="btn btn-primary editModal" data-toggle="modal" data-target="#editModal" api_url="<?php echo $item['api_url'];?>" api_method="<?php echo $item['api_method'];?>" fields='<?php echo $item["fields"];?>' api_name="<?php echo $item['api_name'];?>" _id="<?php echo $item['_id'];?>">编辑</button>
+                        <?php }?>
                         <button type="button" class="btn btn-primary debugModal" data-toggle="modal" data-target="#debugModal" api_url="<?php echo $item['api_url'];?>" api_method="<?php echo $item['api_method'];?>" fields='<?php echo $item["fields"];?>' api_name="<?php echo $item['api_name'];?>">调试</button>
                         <button type="button" class="btn btn-primary showModal" data-toggle="modal" data-target="#showModal" api_url="<?php echo $item['api_url'];?>" api_method="<?php echo $item['api_method'];?>" fields='<?php echo $item["fields"];?>' api_name="<?php echo $item['api_name'];?>">查看</button>
-                        <button type="button" class="btn btn-primary editModal" data-toggle="modal" data-target="#editModal" api_url="<?php echo $item['api_url'];?>" api_method="<?php echo $item['api_method'];?>" fields='<?php echo $item["fields"];?>' api_name="<?php echo $item['api_name'];?>" _id="<?php echo $item['_id'];?>">编辑</button>
-                        <button type="button" class="btn btn-danger deleteModal" data-toggle="modal" data-target=".bs-delete-modal-sm" _id="<?php echo $item['_id'];?>">删除</button>
                     </td>
                 </tr>
             <?php }?>

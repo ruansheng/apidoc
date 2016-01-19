@@ -253,6 +253,10 @@ class ApidocController extends Base {
             }
         }
 
+        if(in_array($data['request_method'], ['GET', 'POST'])) {
+            $this->responseJson(402, '接口的请求方式不正确');
+        }
+
         $ret = [];
 
         $Curl = new Curl();
@@ -264,26 +268,12 @@ class ApidocController extends Base {
             }
 
             $ret = $Curl->get($request_api);
-            $Curl->close();
         } else if($data['request_method'] == 'POST') {
-            if(!empty($data['request_params'])) {
-                ksort($data['request_params']);
-                $params = json_encode($data['request_params']);
-                $params = base64_encode($this->encrypt($params));
-                $ret = $Curl->data(['data'=>$params])->post($data['request_api']);
-            } else {
-                $ret = $Curl->data([])->post($data['request_api']);
-            }
-            $Curl->close();
-        } else {
-            $this->responseJson(402, '接口的请求方式不正确');
+            $ret = $Curl->data($data['request_params'])->post($data['request_api']);
         }
+        $Curl->close();
 
         $ret = json_decode($ret, true);
-
-        if(!empty($ret) && !empty($ret['data'])) {
-            $ret['data'] = $this->decrypt(base64_decode($ret['data']));
-        }
 
         $this->responseJson(200, 'success', $ret);
         return false;
