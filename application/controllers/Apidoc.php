@@ -253,7 +253,7 @@ class ApidocController extends Base {
             }
         }
 
-        if(in_array($data['request_method'], ['GET', 'POST'])) {
+        if(!in_array($data['request_method'], ['GET', 'POST'])) {
             $this->responseJson(402, '接口的请求方式不正确');
         }
 
