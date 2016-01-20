@@ -378,7 +378,7 @@
                     if(ret.en == 200) {
                         new Toast({context:$('body'),top:200 ,time:1000 ,message:ret.em}).success();
                         setTimeout(function(){
-                            $('#deleteModal').modal('hide');
+                            $('#removeAdminModal').modal('hide');
                             window.location.reload();
                         } , 1000);
                     } else {
