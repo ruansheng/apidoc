@@ -103,43 +103,43 @@
     </div>
     <table class="table table-striped">
         <?php foreach($list as $item) {?>
-            <?php if($item['api_method'] == 'GET') {?>
-                <tr class="success">
-                    <td style="width:50px;line-height:32px;">
-                        <span class="label label-success">GET</span>
-                    </td>
-                    <td style="width:250px;line-height:32px;">
-                        <?php echo $item['api_name'];?>
-                    </td>
-                    <td style="line-height:32px;"><?php echo $item['api_url'];?></td>
-                    <td class="item-btn-tr">
-                        <?php if($base_admininfo['super'] == 1) {?>
-                            <button type="button" class="btn btn-danger deleteModal" data-toggle="modal" data-target=".bs-delete-modal-sm" _id="<?php echo $item['_id'];?>">删除</button>
-                            <button type="button" class="btn btn-primary editModal" data-toggle="modal" data-target="#editModal" api_url="<?php echo $item['api_url'];?>" api_method="<?php echo $item['api_method'];?>" fields='<?php echo $item["fields"];?>' api_name="<?php echo $item['api_name'];?>" _id="<?php echo $item['_id'];?>">编辑</button>
-                        <?php }?>
-                        <button type="button" class="btn btn-primary debugModal" data-toggle="modal" data-target="#debugModal" api_url="<?php echo $item['api_url'];?>" api_method="<?php echo $item['api_method'];?>" fields='<?php echo $item["fields"];?>' api_name="<?php echo $item['api_name'];?>">调试</button>
-                        <button type="button" class="btn btn-primary showModal" data-toggle="modal" data-target="#showModal" api_url="<?php echo $item['api_url'];?>" api_method="<?php echo $item['api_method'];?>" fields='<?php echo $item["fields"];?>' api_name="<?php echo $item['api_name'];?>">查看</button>
-                    </td>
-                </tr>
-            <?php } else if ($item['api_method'] == 'POST') {?>
-                <tr class="info">
-                    <td style="width:50px;line-height:32px;">
-                        <span class="label label-primary">POST</span>
-                    </td>
-                    <td style="width:250px;line-height:32px;">
-                        <?php echo $item['api_name'];?>
-                    </td>
-                    <td style="line-height:32px;"><?php echo $item['api_url'];?></td>
-                    <td class="item-btn-tr">
-                        <?php if($base_admininfo['super'] == 1) {?>
-                            <button type="button" class="btn btn-danger deleteModal" data-toggle="modal" data-target=".bs-delete-modal-sm" _id="<?php echo $item['_id'];?>">删除</button>
-                            <button type="button" class="btn btn-primary editModal" data-toggle="modal" data-target="#editModal" api_url="<?php echo $item['api_url'];?>" api_method="<?php echo $item['api_method'];?>" fields='<?php echo $item["fields"];?>' api_name="<?php echo $item['api_name'];?>" _id="<?php echo $item['_id'];?>">编辑</button>
-                        <?php }?>
-                        <button type="button" class="btn btn-primary debugModal" data-toggle="modal" data-target="#debugModal" api_url="<?php echo $item['api_url'];?>" api_method="<?php echo $item['api_method'];?>" fields='<?php echo $item["fields"];?>' api_name="<?php echo $item['api_name'];?>">调试</button>
-                        <button type="button" class="btn btn-primary showModal" data-toggle="modal" data-target="#showModal" api_url="<?php echo $item['api_url'];?>" api_method="<?php echo $item['api_method'];?>" fields='<?php echo $item["fields"];?>' api_name="<?php echo $item['api_name'];?>">查看</button>
-                    </td>
-                </tr>
-            <?php }?>
+        <?php if($item['api_method'] == 'GET') {?>
+        <tr class="success">
+            <td style="width:50px;line-height:32px;">
+                <span class="label label-success">GET</span>
+            </td>
+            <td style="width:250px;line-height:32px;">
+                <?php echo $item['api_name'];?>
+            </td>
+            <td style="line-height:32px;"><?php echo $item['api_url'];?></td>
+            <td class="item-btn-tr">
+                <?php if($base_admininfo['super'] == 1) {?>
+                <button type="button" class="btn btn-danger deleteModal" data-toggle="modal" data-target=".bs-delete-modal-sm" _id="<?php echo $item['_id'];?>">删除</button>
+                <button type="button" class="btn btn-primary editModal" data-toggle="modal" data-target="#editModal" api_url="<?php echo $item['api_url'];?>" api_method="<?php echo $item['api_method'];?>" fields='<?php echo $item["fields"];?>' api_name="<?php echo $item['api_name'];?>" _id="<?php echo $item['_id'];?>">编辑</button>
+                <?php }?>
+                <button type="button" class="btn btn-primary debugModal" data-toggle="modal" data-target="#debugModal" api_url="<?php echo $item['api_url'];?>" api_method="<?php echo $item['api_method'];?>" fields='<?php echo $item["fields"];?>' api_name="<?php echo $item['api_name'];?>">调试</button>
+                <button type="button" class="btn btn-primary showModal" data-toggle="modal" data-target="#showModal" api_url="<?php echo $item['api_url'];?>" api_method="<?php echo $item['api_method'];?>" fields='<?php echo $item["fields"];?>' api_name="<?php echo $item['api_name'];?>">查看</button>
+            </td>
+        </tr>
+        <?php } else if ($item['api_method'] == 'POST') {?>
+        <tr class="info">
+            <td style="width:50px;line-height:32px;">
+                <span class="label label-primary">POST</span>
+            </td>
+            <td style="width:250px;line-height:32px;">
+                <?php echo $item['api_name'];?>
+            </td>
+            <td style="line-height:32px;"><?php echo $item['api_url'];?></td>
+            <td class="item-btn-tr">
+                <?php if($base_admininfo['super'] == 1) {?>
+                <button type="button" class="btn btn-danger deleteModal" data-toggle="modal" data-target=".bs-delete-modal-sm" _id="<?php echo $item['_id'];?>">删除</button>
+                <button type="button" class="btn btn-primary editModal" data-toggle="modal" data-target="#editModal" api_url="<?php echo $item['api_url'];?>" api_method="<?php echo $item['api_method'];?>" fields='<?php echo $item["fields"];?>' api_name="<?php echo $item['api_name'];?>" _id="<?php echo $item['_id'];?>">编辑</button>
+                <?php }?>
+                <button type="button" class="btn btn-primary debugModal" data-toggle="modal" data-target="#debugModal" api_url="<?php echo $item['api_url'];?>" api_method="<?php echo $item['api_method'];?>" fields='<?php echo $item["fields"];?>' api_name="<?php echo $item['api_name'];?>">调试</button>
+                <button type="button" class="btn btn-primary showModal" data-toggle="modal" data-target="#showModal" api_url="<?php echo $item['api_url'];?>" api_method="<?php echo $item['api_method'];?>" fields='<?php echo $item["fields"];?>' api_name="<?php echo $item['api_name'];?>">查看</button>
+            </td>
+        </tr>
+        <?php }?>
         <?php }?>
     </table>
 </div>
@@ -218,6 +218,12 @@
                 <h5>请求参数</h5>
                 <div class="request-params-debug">
                 </div>
+                <hr/>
+                <h5>响应头</h5>
+                <button id="toggle-btn-debug-response">Toggle</button>
+                <button id="toggle-level1-btn-response">Toggle level1</button>
+                <button id="toggle-level2-btn-response">Toggle level2</button>
+                <div id="json-response" style="word-wrap: break-word;"></div>
                 <hr/>
                 <h5>返回数据</h5>
                 <button id="toggle-btn-debug">Toggle</button>
@@ -460,7 +466,8 @@
 
             $.post('/apidoc/requestDebug' ,data ,function(ret) {
                 if(ret.en == 200) {
-                    $("#json-debug").JSONView(ret.data);
+                    $("#json-response").JSONView(ret.data.header);
+                    $("#json-debug").JSONView(ret.data.body);
                 } else {
                     new Toast({context:$('body'),top:200 ,time:1000, message:ret.em}).error();
                 }

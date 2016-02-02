@@ -25,7 +25,9 @@ class Curl {
         //文件流的形式返回
         CURLOPT_RETURNTRANSFER => 1,
         //每次都用新连接代替缓存中的连接
-        CURLOPT_FRESH_CONNECT => true
+        CURLOPT_FRESH_CONNECT => true,
+        //返回响应头
+        CURLOPT_HEADER => true
     );
 
     /**
@@ -108,14 +110,28 @@ class Curl {
      */
     public function get($url){
         $result=$this->request($url);
-        return $result;
+        $ret = $this->parseBody($result);
+        return $ret;
     }
     /**
      * POST 请求
      */
     public function post($url){
         $result=$this->request($url);
-        return $result;
+        $ret = $this->parseBody($result);
+        return $ret;
+    }
+
+    /**
+     * 解析
+     * @param $result
+     * @return array
+     */
+    private function parseBody($result) {
+        $headerSize = curl_getinfo($this->handler, CURLINFO_HEADER_SIZE);
+        $header = substr($result, 0, $headerSize);
+        $body =  substr($result, $headerSize);
+        return array('header'=>$header, 'body'=>$body);
     }
 
     /**

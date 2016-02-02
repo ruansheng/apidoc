@@ -273,7 +273,8 @@ class ApidocController extends Base {
         }
         $Curl->close();
 
-        $ret = json_decode($ret, true);
+        $ret['header'] = explode(PHP_EOL, $ret['header']);
+        $ret['body'] = json_decode($ret['body'], true);
 
         $this->responseJson(200, 'success', $ret);
         return false;
