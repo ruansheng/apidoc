@@ -53,14 +53,13 @@
             width:150px;
         }
 
-        /* 查看 模态框 */
-        .request-params-show {
-            width:300px;
-        }
-
         .config-field-group{
             width:500px;
             margin-bottom:10px;
+        }
+
+        #request-btn-debug{
+            margin-top: 10px;
         }
 
         /** 编辑接口 */
@@ -71,7 +70,7 @@
 
         /** 添加 参数按钮 */
         .config-field-add-btn button{
-            margin-left:207px;
+            margin-left:415px;
             margin-bottom: 10px;
         }
         .config-field{
@@ -175,16 +174,17 @@
                 </div>
                 <div class="request-params-addConfig">
                     <div class="config-field-group">
+                        <select class="form-control config-field" name="add-api-field-type">
+                            <option value="header">header</option>
+                            <option value="body" selected>body</option>
+                            <option value="cookie">cookie</option>
+                        </select>
                         <input type="text" class="form-control config-field" name="add-api-field-name" placeholder="字段">
+                        <input type="text" class="form-control config-field" name="add-api-field-default" placeholder="默认值">
                         <input type="text" class="form-control config-field" name="add-api-field-desc" placeholder="描述">
                         <button type="button" class="btn btn-danger config-field-btn remove-config-field-btn">删除</button>
                     </div>
                 </div>
-                <!--
-                <hr/>
-                <h5>返回结果</h5>
-                <textarea class="form-control" rows="3"></textarea>
-                -->
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
@@ -344,26 +344,44 @@
 
 <script>
     $(function(){
-        // 添加field
+        // 添加接口(添加field)
         $('.add-config-field-btn').click(function() {
-            var item = $('.config-field-group').eq(0).clone();
-            item.children('input').val('');
+            if($('.config-field-group').length == 0) {
+                var type = '<select class="form-control config-field" name="add-api-field-type"><option value="header">header</option> <option value="body" selected>body</option><option value="cookie">cookie</option></select>';
+                var name = '<input type="text" class="form-control config-field" name="add-api-field-name" placeholder="字段">';
+                var idefault = '<input type="text" class="form-control config-field" name="add-api-field-default" placeholder="默认值">';
+                var desc = '<input type="text" class="form-control config-field" name="add-api-field-desc" placeholder="描述">';
+                var remove = '<button type="button" class="btn btn-danger config-field-btn remove-config-field-btn">删除</button>';
+                var item = '<div class="config-field-group">' + type + name + idefault + desc + remove + '</div>';
+            } else {
+                var item = $('.config-field-group').eq(0).clone();
+                item.children('input').val('');
+            }
             $('.request-params-addConfig').append(item);
         });
 
-        // 删除field
+        // 添加接口(删除field)
         $('.request-params-addConfig').on('click','.remove-config-field-btn',function() {
             $(this).parent('div').remove();
         });
 
-        // 添加field
+        // 修改接口(添加field)
         $('.edit-config-field-btn').click(function() {
-            var item = $('.edit-field-group-config').eq(0).clone();
-            item.children('input').val('');
+            if($('.edit-field-group-config').length == 0) {
+                var type = ' <select class="form-control config-field" name="edit-api-field-type"> <option value="header">header</option> <option value="body" selected>body</option> <option value="cookie">cookie</option> </select>';
+                var name = '<input type="text" class="form-control config-field" name="edit-api-field-name" placeholder="字段">';
+                var idefault = '<input type="text" class="form-control config-field" name="edit-api-field-default" placeholder="默认值">';
+                var desc = '<input type="text" class="form-control config-field" name="edit-api-field-desc" placeholder="描述">';
+                var remove = '<button type="button" class="btn btn-danger config-field-btn config-remove-config-field-btn">删除</button>';
+                var item = '<div class="config-field-group">' + type + name + idefault + desc + remove + '</div>';
+            } else {
+                var item = $('.edit-field-group-config').eq(0).clone();
+                item.children('input').val('');
+            }
             $('.edit-params-fields').append(item);
         });
 
-        // 删除field
+        // 修改接口(删除field)
         $('.edit-params-fields').on('click','.config-remove-config-field-btn',function() {
             $(this).parent('div').remove();
         });
@@ -411,13 +429,27 @@
                 api_method = 'POST';
             }
 
+            var types = $('select[name=add-api-field-type]');
             var names = $('input[name=add-api-field-name]');
+            var defaults = $('input[name=add-api-field-default]');
             var descs = $('input[name=add-api-field-desc]');
+
+            var field_types = new Array();
+            for(var i= 0; i<types.length; i++) {
+                var type = types.eq(i).val();
+                field_types[i] = type;
+            }
 
             var field_names = new Array();
             for(var i= 0; i<names.length; i++) {
                 var name = names.eq(i).val();
                 field_names[i] = name;
+            }
+
+            var field_defaults = new Array();
+            for(var i= 0; i<defaults.length; i++) {
+                var idefault = defaults.eq(i).val();
+                field_defaults[i] = idefault;
             }
 
             var field_descs = new Array();
@@ -427,7 +459,7 @@
             }
 
             var url = '/apidoc/addApi';
-            var data = {"api_name":api_name,"api_url":api_url,"api_method":api_method,"field_names":field_names,"field_descs":field_descs};
+            var data = {"api_name":api_name,"api_url":api_url,"api_method":api_method,"field_types":field_types,"field_names":field_names,"field_defaults":field_defaults,"field_descs":field_descs};
             $.post(url, data, function(ret){
                 if(ret.en == 200) {
                     new Toast({context:$('body'),top:200 ,time:2000 ,message:'保存成功'}).success();
@@ -439,6 +471,35 @@
                     new Toast({context:$('body'),top:200 ,time:2000, message:ret.em}).error();
                 }
             });
+        });
+
+        /** "调试" 触发模态框显示 */
+        $('.debugModal').click(function () {
+            var api_name = $(this).attr('api_name');
+            var api_url = $(this).attr('api_url');
+            var api_method = $(this).attr('api_method');
+            var fields = $(this).attr('fields');
+            fields = eval("(" + fields + ")");
+
+            // 设置api name
+            $('#request-api-name').html(api_name);
+
+            // 设置url
+            $('#request-api').html(api_url);
+
+            // 设置请求的方式
+            $('#request-method').html(api_method);
+
+            // 设置 fields
+            var fields_html = '';
+            for(var i = 0; i < fields.length; i++) {
+                fields_html += '<div class="input-group"> <div class="input-group-addon">' + fields[i].type + '</div><input type="text" style="width:150px;" class="form-control field-width request-data-params" name="' + fields[i].name + '" placeholder="' + fields[i].name + '"></div>';
+            }
+            fields_html += ' <button type="button" id="request-btn-debug" class="btn btn-primary btn-width">请求</button>';
+            $('.request-params-debug').html('');
+            $('.request-params-debug').prepend(fields_html);
+
+            $('#json-debug').html('');
         });
 
         /** 调试 请求*/
@@ -474,35 +535,6 @@
             });
         });
 
-        /** "调试" 触发模态框显示 */
-        $('.debugModal').click(function () {
-            var api_name = $(this).attr('api_name');
-            var api_url = $(this).attr('api_url');
-            var api_method = $(this).attr('api_method');
-            var fields = $(this).attr('fields');
-            fields = eval("(" + fields + ")");
-
-            // 设置api name
-            $('#request-api-name').html(api_name);
-
-            // 设置url
-            $('#request-api').html(api_url);
-
-            // 设置请求的方式
-            $('#request-method').html(api_method);
-
-            // 设置 fields
-            var fields_html = '';
-            for(var i = 0; i < fields.length; i++) {
-                fields_html += '<div class="form-group"> <input type="text" class="form-control field-width request-data-params" name="' + fields[i].name + '" placeholder="' + fields[i].name + '"></div>';
-            }
-            fields_html += ' <button type="button" id="request-btn-debug" class="btn btn-primary btn-width">请求</button>';
-            $('.request-params-debug').html('');
-            $('.request-params-debug').prepend(fields_html);
-
-            $('#json-debug').html('');
-        });
-
         /** "查看" 触发模态框显示 */
         $('.showModal').click(function () {
             var api_name = $(this).attr('api_name');
@@ -523,37 +555,10 @@
             // 设置 fields
             var fields_html = '';
             for(var i = 0; i < fields.length; i++) {
-                fields_html += fields[i].name + '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' + fields[i].desc + '<br/>';
+                fields_html += '类型:' + fields[i].type + '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' + '字段:' + fields[i].name + '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' + '默认值:' + fields[i].default + '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' + '描述:' + fields[i].desc + '<br/>';
             }
             $('.show-params-fields').html('');
             $('.show-params-fields').prepend(fields_html);
-        })
-
-        /** "删除" 触发模态框显示 */
-        $('.deleteModal').click(function(){
-            var _id = $(this).attr('_id');
-            $('#delete_data_id').val(_id);
-        });
-
-        /** 执行 "删除" */
-        $('.delete-modal-ensure').click(function(){
-            var _id = $('#delete_data_id').val();;
-            var request_api = '/apidoc/delete';
-            if(_id != undefined && _id != '') {
-                $.post(request_api ,{"_id":_id} ,function(ret) {
-                    if(ret.en == 200) {
-                        new Toast({context:$('body'),top:200 ,time:1000 ,message:ret.em}).success();
-                        setTimeout(function(){
-                            $('#deleteModal').modal('hide');
-                            window.location.reload();
-                        } , 1000);
-                    } else {
-                        new Toast({context:$('body'),top:200 ,time:1000, message:ret.em}).error();
-                    }
-                });
-            } else {
-                new Toast({context:$('body'),top:200 ,time:1000, message:"参数不全"}).error();
-            }
         });
 
         /** "编辑接口" 触发模态框显示 */
@@ -586,7 +591,18 @@
             // 设置 fields
             var fields_html = '';
             for(var i = 0; i < fields.length; i++) {
-                fields_html += '<div class="edit-field-group-config"> <input type="text" class="form-control config-field" name="edit-api-field-name" placeholder="字段" value="' + fields[i].name + '"> <input type="text" class="form-control config-field" placeholder="描述" name="edit-api-field-desc" value="' + fields[i].desc + '"> <button type="button" class="btn btn-danger config-field-btn config-remove-config-field-btn">删除</button></div>';
+                if(fields[i].type == 'header') {
+                    var type = ' <select class="form-control config-field" name="edit-api-field-type"> <option value="header" selected>header</option> <option value="body">body</option> <option value="cookie">cookie</option> </select>';
+                } else if(fields[i].type == 'body') {
+                    var type = ' <select class="form-control config-field" name="edit-api-field-type"> <option value="header">header</option> <option value="body" selected>body</option> <option value="cookie">cookie</option> </select>';
+                } else if(fields[i].type == 'cookie') {
+                    var type = ' <select class="form-control config-field" name="edit-api-field-type"> <option value="header">header</option> <option value="body">body</option> <option value="cookie" selected>cookie</option> </select>';
+                }
+                var field = '<input type="text" class="form-control config-field" name="edit-api-field-name" placeholder="字段" value="' + fields[i].name + '">';
+                var idefault = '<input type="text" class="form-control config-field" name="edit-api-field-default" placeholder="默认值" value="' + fields[i].default + '">';
+                var desc = '<input type="text" class="form-control config-field" name="edit-api-field-desc" placeholder="描述" value="' + fields[i].desc + '">';
+                var remove = '<button type="button" class="btn btn-danger config-field-btn config-remove-config-field-btn">删除</button>';
+                fields_html += '<div class="edit-field-group-config">' + type + field + idefault + desc + remove + '</div>';
             }
 
             $('.edit-params-fields').html('');
@@ -636,6 +652,38 @@
                     new Toast({context:$('body'),top:200 ,time:2000, message:ret.em}).error();
                 }
             });
+        });
+
+        /** "删除" 触发模态框显示 */
+        $('.deleteModal').click(function(){
+            var _id = $(this).attr('_id');
+            $('#delete_data_id').val(_id);
+
+            // "删除" 模态框垂直居中
+            $("#deleteModal").css({
+                "top": "200px"
+            });
+        });
+
+        /** 执行 "删除" */
+        $('.delete-modal-ensure').click(function(){
+            var _id = $('#delete_data_id').val();;
+            var request_api = '/apidoc/delete';
+            if(_id != undefined && _id != '') {
+                $.post(request_api ,{"_id":_id} ,function(ret) {
+                    if(ret.en == 200) {
+                        new Toast({context:$('body'),top:200 ,time:1000 ,message:ret.em}).success();
+                        setTimeout(function(){
+                            $('#deleteModal').modal('hide');
+                            window.location.reload();
+                        } , 1000);
+                    } else {
+                        new Toast({context:$('body'),top:200 ,time:1000, message:ret.em}).error();
+                    }
+                });
+            } else {
+                new Toast({context:$('body'),top:200 ,time:1000, message:"参数不全"}).error();
+            }
         });
 
     });

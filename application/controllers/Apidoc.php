@@ -54,32 +54,27 @@ class ApidocController extends Base {
             $this->responseJson(401, 'api_method is empty');
         }
 
-        if(!isset($data['field_names'])) {
-            $this->responseJson(401, 'field_names no isset');
-        } else if(empty($data['field_names'])){
-            $this->responseJson(401, 'field_names is empty');
-        }
-
-        if(!isset($data['field_descs'])) {
-            $this->responseJson(401, 'field_descs no isset');
-        } else if(empty($data['field_descs'])){
-            $this->responseJson(401, 'field_descs is empty');
-        }
-
         $is_full = true;
 
         $fields = array();
-        foreach($data['field_names'] as $nk=>$name) {
-            foreach($data['field_descs'] as $dk=>$desc) {
-                if($nk == $dk) {
-                    if(empty($name) || empty($desc)) {
-                        $is_full = false;
-                    } else {
-                        $fields[] = array(
-                            'name' => $name,
-                            'desc' => $desc
-                        );
+        foreach($data['field_types'] as $tk=>$tname) {
+            foreach($data['field_names'] as $nk=>$nname) {
+                foreach ($data['field_defaults'] as $dk => $dname) {
+                    foreach ($data['field_descs'] as $ddk => $ddname) {
+                        if($tk == $nk && $nk == $dk && $dk == $ddk) {
+                            if(empty($tname) || empty($nname) || empty($ddname)) {
+                                $is_full = false;
+                            } else {
+                                $fields[] = array(
+                                    'type' => $tname,
+                                    'name' => $nname,
+                                    'default' => $dname,
+                                    'desc' => $ddname
+                                );
+                            }
+                        }
                     }
+
                 }
             }
         }
@@ -142,32 +137,27 @@ class ApidocController extends Base {
             $this->responseJson(401, 'api_method is empty');
         }
 
-        if(!isset($data['field_names'])) {
-            $this->responseJson(401, 'field_names no isset');
-        } else if(empty($data['field_names'])){
-            $this->responseJson(401, 'field_names is empty');
-        }
-
-        if(!isset($data['field_descs'])) {
-            $this->responseJson(401, 'field_descs no isset');
-        } else if(empty($data['field_descs'])){
-            $this->responseJson(401, 'field_descs is empty');
-        }
-
         $is_full = true;
 
         $fields = array();
-        foreach($data['field_names'] as $nk=>$name) {
-            foreach($data['field_descs'] as $dk=>$desc) {
-                if($nk == $dk) {
-                    if(empty($name) || empty($desc)) {
-                        $is_full = false;
-                    } else {
-                        $fields[] = array(
-                            'name' => $name,
-                            'desc' => $desc
-                        );
+        foreach($data['field_types'] as $tk=>$tname) {
+            foreach($data['field_names'] as $nk=>$nname) {
+                foreach ($data['field_defaults'] as $dk => $dname) {
+                    foreach ($data['field_descs'] as $ddk => $ddname) {
+                        if($tk == $nk && $nk == $dk && $dk == $ddk) {
+                            if(empty($tname) || empty($nname) || empty($ddname)) {
+                                $is_full = false;
+                            } else {
+                                $fields[] = array(
+                                    'type' => $tname,
+                                    'name' => $nname,
+                                    'default' => $dname,
+                                    'desc' => $ddname
+                                );
+                            }
+                        }
                     }
+
                 }
             }
         }
