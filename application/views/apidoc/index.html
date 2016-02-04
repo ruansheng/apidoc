@@ -493,7 +493,7 @@
             // 设置 fields
             var fields_html = '';
             for(var i = 0; i < fields.length; i++) {
-                fields_html += '<div class="input-group"> <div class="input-group-addon">' + fields[i].type + '</div><input type="text" style="width:150px;" class="form-control field-width request-data-params" name="' + fields[i].name + '" placeholder="' + fields[i].name + '"></div>';
+                fields_html += '<div class="input-group"> <div class="input-group-addon">' + fields[i].type + '</div><input type="text" style="width:150px;" class="form-control field-width request-data-params" name="' + fields[i].type + '-' + fields[i].name + '" placeholder="' + fields[i].name + '"></div>';
             }
             fields_html += ' <button type="button" id="request-btn-debug" class="btn btn-primary btn-width">请求</button>';
             $('.request-params-debug').html('');

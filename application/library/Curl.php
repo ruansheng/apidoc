@@ -104,6 +104,14 @@ class Curl {
     }
 
     /**
+     * 设置cookie
+     */
+    public function cookie($data){
+        curl_setopt($this->handler, CURLOPT_COOKIEFILE, $data); //设置cookie信息
+        return $this;
+    }
+
+    /**
      * GET 请求
      * @param string $url
      * @return mixed

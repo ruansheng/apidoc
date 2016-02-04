@@ -232,33 +232,53 @@ class ApidocController extends Base {
             $this->responseJson(401, 'request_method is empty');
         }
 
-        if(!isset($data['request_params'])) {
-            $this->responseJson(401, 'request_params no isset');
-        }
-        if(!empty($data['request_params'])){
-            foreach($data['request_params'] as $key => $val) {
-                if(empty($val)) {
-                    $this->responseJson(401, $key . ' is empty');
-                }
-            }
-        }
-
         if(!in_array($data['request_method'], ['GET', 'POST'])) {
             $this->responseJson(402, '接口的请求方式不正确');
+        }
+
+        // 构造请求参数
+        $header = [];
+        $body = [];
+        $cookie = [];
+
+        if(isset($data['request_params']) && !empty($data['request_params'])){
+            foreach($data['request_params'] as $key => $val) {
+                $key_row = explode('-', $key);
+                $param_type = $key_row[0];  // 参数类型 header body cookie
+                $param_name = $key_row[1];
+                if($param_type == 'header') {
+                    $header[$param_name] = $val;
+                } else if($param_type == 'body') {
+                    $body[$param_name] = $val;
+                } else if($param_type == 'cookie') {
+                    $cookie[$param_name] = $val;
+                }
+            }
         }
 
         $ret = [];
 
         $Curl = new Curl();
         if($data['request_method'] == 'GET') {
-            if(empty($data['request_params'])) {
+            if(empty($body)) {
                 $request_api = $data['request_api'];
             } else {
                 $request_api = $data['request_api'] . '?'. http_build_query($data['request_params']);
             }
-
+            if(!empty($header)) {
+                $Curl = $Curl->header($header);
+            }
+            if(!empty($cookie)) {
+                $Curl = $Curl->cookie($cookie);
+            }
             $ret = $Curl->get($request_api);
         } else if($data['request_method'] == 'POST') {
+            if(!empty($header)) {
+                $Curl = $Curl->header($header);
+            }
+            if(!empty($cookie)) {
+                $Curl = $Curl->cookie($cookie);
+            }
             $ret = $Curl->data($data['request_params'])->post($data['request_api']);
         }
         $Curl->close();
