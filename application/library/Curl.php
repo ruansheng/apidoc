@@ -97,6 +97,7 @@ class Curl {
 
     /**
      * 设置请求头
+     * $data array('SESSION:xxxxx','TOKEN:xxxxx')
      */
     public function header($data){
         curl_setopt($this->handler, CURLOPT_HTTPHEADER,$data); //设置头信息
@@ -105,9 +106,10 @@ class Curl {
 
     /**
      * 设置cookie
+     * $data name=rs;age=21
      */
     public function cookie($data){
-        curl_setopt($this->handler, CURLOPT_COOKIEFILE, $data); //设置cookie信息
+        curl_setopt($this->handler, CURLOPT_COOKIE, $data); //设置cookie信息
         return $this;
     }
 

@@ -247,11 +247,11 @@ class ApidocController extends Base {
                 $param_type = $key_row[0];  // 参数类型 header body cookie
                 $param_name = $key_row[1];
                 if($param_type == 'header') {
-                    $header[$param_name] = $val;
+                    $header[] = $param_name . ':' . $val;
                 } else if($param_type == 'body') {
                     $body[$param_name] = $val;
                 } else if($param_type == 'cookie') {
-                    $cookie[$param_name] = $val;
+                    $cookie[] = $param_name . ':' . $val;
                 }
             }
         }
