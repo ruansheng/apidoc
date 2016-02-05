@@ -259,32 +259,26 @@ class ApidocController extends Base {
         $ret = [];
 
         $Curl = new Curl();
-        if($data['request_method'] == 'GET') {
-            if(empty($body)) {
-                $request_api = $data['request_api'];
-            } else {
-                $request_api = $data['request_api'] . '?'. http_build_query($data['request_params']);
-            }
-            if(!empty($header)) {
-                $Curl = $Curl->header($header);
-            }
-            if(!empty($cookie)) {
-                $Curl = $Curl->cookie($cookie);
-            }
-            $ret = $Curl->get($request_api);
-        } else if($data['request_method'] == 'POST') {
-            if(!empty($header)) {
-                $Curl = $Curl->header($header);
-            }
-            if(!empty($cookie)) {
-                $Curl = $Curl->cookie($cookie);
-            }
-            $ret = $Curl->data($data['request_params'])->post($data['request_api']);
+        if(!empty($header)) {
+            $Curl = $Curl->header($header);
         }
-        $Curl->close();
+        if(!empty($cookie)) {
+            $Curl = $Curl->cookie(implode(';', $cookie));
+        }
+        if(!empty($body)) {
+            $Curl = $Curl->body($body);
+        }
 
-        $ret['header'] = explode(PHP_EOL, $ret['header']);
-        $ret['body'] = json_decode($ret['body'], true);
+        if($data['request_method'] == 'GET') {
+            $ret = $Curl->get($data['request_api']);
+        } else if($data['request_method'] == 'POST') {
+            $ret = $Curl->post($data['request_api']);
+        }
+
+        $ret['header'] = $Curl->getResponseHeader();
+        $ret['body'] = json_decode($Curl->getResponseBody(), true);
+
+        $Curl->close();
 
         $this->responseJson(200, 'success', $ret);
         return false;
