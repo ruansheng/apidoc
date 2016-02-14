@@ -256,7 +256,7 @@ class ApidocController extends Base {
             }
         }
 
-        $ret = [];
+        $result = [];
 
         $Curl = new Curl();
         if(!empty($header)) {
@@ -270,17 +270,17 @@ class ApidocController extends Base {
         }
 
         if($data['request_method'] == 'GET') {
-            $ret = $Curl->get($data['request_api']);
+            $Curl->get($data['request_api']);
         } else if($data['request_method'] == 'POST') {
-            $ret = $Curl->post($data['request_api']);
+            $Curl->post($data['request_api']);
         }
 
-        $ret['header'] = $Curl->getResponseHeader();
-        $ret['body'] = json_decode($Curl->getResponseBody(), true);
+        $result['header'] = $Curl->getResponseHeader();
+        $result['body'] = json_decode($Curl->getResponseBody(), true);
 
         $Curl->close();
 
-        $this->responseJson(200, 'success', $ret);
+        $this->responseJson(200, 'success', $result);
         return false;
     }
 }

@@ -220,9 +220,6 @@
                 </div>
                 <hr/>
                 <h5>响应头</h5>
-                <button id="toggle-btn-debug-response">Toggle</button>
-                <button id="toggle-level1-btn-response">Toggle level1</button>
-                <button id="toggle-level2-btn-response">Toggle level2</button>
                 <div id="json-response" style="word-wrap: break-word;"></div>
                 <hr/>
                 <h5>返回数据</h5>
@@ -493,7 +490,7 @@
             // 设置 fields
             var fields_html = '';
             for(var i = 0; i < fields.length; i++) {
-                fields_html += '<div class="input-group"> <div class="input-group-addon">' + fields[i].type + '</div><input type="text" style="width:150px;" class="form-control field-width request-data-params" name="' + fields[i].type + '-' + fields[i].name + '" placeholder="' + fields[i].name + '"></div>';
+                fields_html += '<div class="input-group" style="margin-bottom:10px;"> <div class="input-group-addon">' + fields[i].type + '</div><input type="text" style="width:150px;" class="form-control field-width request-data-params" name="' + fields[i].type + '-' + fields[i].name + '" placeholder="' + fields[i].name + '"></div>';
             }
             fields_html += ' <button type="button" id="request-btn-debug" class="btn btn-primary btn-width">请求</button>';
             $('.request-params-debug').html('');
@@ -527,7 +524,8 @@
 
             $.post('/apidoc/requestDebug' ,data ,function(ret) {
                 if(ret.en == 200) {
-                    $("#json-response").JSONView(ret.data.header);
+                    var header = ret.data.header.replace(/\r\n/g,'<br/>');
+                    $("#json-response").html(header);
                     $("#json-debug").JSONView(ret.data.body);
                 } else {
                     new Toast({context:$('body'),top:200 ,time:1000, message:ret.em}).error();
@@ -597,6 +595,8 @@
                     var type = ' <select class="form-control config-field" name="edit-api-field-type"> <option value="header">header</option> <option value="body" selected>body</option> <option value="cookie">cookie</option> </select>';
                 } else if(fields[i].type == 'cookie') {
                     var type = ' <select class="form-control config-field" name="edit-api-field-type"> <option value="header">header</option> <option value="body">body</option> <option value="cookie" selected>cookie</option> </select>';
+                } else {
+                    var type = ' <select class="form-control config-field" name="edit-api-field-type"> <option value="header">header</option> <option value="body" selected>body</option> <option value="cookie">cookie</option> </select>';
                 }
                 var field = '<input type="text" class="form-control config-field" name="edit-api-field-name" placeholder="字段" value="' + fields[i].name + '">';
                 var idefault = '<input type="text" class="form-control config-field" name="edit-api-field-default" placeholder="默认值" value="' + fields[i].default + '">';
@@ -624,13 +624,27 @@
                 api_method = 'POST';
             }
 
+            var types = $('select[name=edit-api-field-type]');
             var names = $('input[name=edit-api-field-name]');
+            var defaults = $('input[name=edit-api-field-default]');
             var descs = $('input[name=edit-api-field-desc]');
+
+            var field_types = new Array();
+            for(var i= 0; i<types.length; i++) {
+                var type = types.eq(i).val();
+                field_types[i] = type;
+            }
 
             var field_names = new Array();
             for(var i= 0; i<names.length; i++) {
                 var name = names.eq(i).val();
                 field_names[i] = name;
+            }
+
+            var field_defaults = new Array();
+            for(var i= 0; i<defaults.length; i++) {
+                var idefault = defaults.eq(i).val();
+                field_defaults[i] = idefault;
             }
 
             var field_descs = new Array();
@@ -640,7 +654,7 @@
             }
 
             var url = '/apidoc/saveApi';
-            var data = {"_id":_id,"api_name":api_name,"api_url":api_url,"api_method":api_method,"field_names":field_names,"field_descs":field_descs};
+            var data = {"_id":_id,"api_name":api_name,"api_url":api_url,"api_method":api_method,"field_types":field_types,"field_names":field_names,"field_defaults":field_defaults,"field_descs":field_descs};
             $.post(url, data, function(ret){
                 if(ret.en == 200) {
                     new Toast({context:$('body'),top:200 ,time:2000 ,message:'保存成功'}).success();
