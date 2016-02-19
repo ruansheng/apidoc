@@ -251,7 +251,7 @@ class ApidocController extends Base {
                 } else if($param_type == 'body') {
                     $body[$param_name] = $val;
                 } else if($param_type == 'cookie') {
-                    $cookie[] = $param_name . ':' . $val;
+                    $cookie[] = $param_name . '=' . $val;
                 }
             }
         }
@@ -263,7 +263,7 @@ class ApidocController extends Base {
             $Curl = $Curl->header($header);
         }
         if(!empty($cookie)) {
-            $Curl = $Curl->cookie(implode(';', $cookie));
+            $Curl = $Curl->cookie(implode('&', $cookie));
         }
         if(!empty($body)) {
             $Curl = $Curl->body($body);
